@@ -1,0 +1,2 @@
+lead_id,created_at,source,campaign,first_name,last_name,email,phone,status,score,notes
+1,2025-09-13,facebook,Campaña Sep,Juan,Perez,juan@example.com,+521234567890,new,0,"Primer contacto"

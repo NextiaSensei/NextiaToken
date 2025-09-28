@@ -1,0 +1,19 @@
+# Env
+.env
+
+# Hardhat
+/deployments/
+/cache/
+/artifacts/
+
+# Node
+/node_modules/
+package-lock.json
+
+# Backups
+/backups/
+/scripts/backup_deployments.sh
+/scripts/copy_to_usb.sh
+
+# Otros locales
+*.log

@@ -1,0 +1,11 @@
+.env
+.env.local
+.secret
+*.key
+node_modules/
+artifacts/
+cache/
+coverage/
+*.log
+.DS_Store
+.vscode/

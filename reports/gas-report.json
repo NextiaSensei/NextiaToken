@@ -1,0 +1,11 @@
+{
+  "deployCost": {
+    "gasUsed": "1363956",
+    "gasCostEth": "0.0"
+  },
+  "transferCost": {
+    "gasUsed": "54503",
+    "gasCostEth": "0.0"
+  },
+  "ts": "2025-09-27T22:18:35.147Z"
+}

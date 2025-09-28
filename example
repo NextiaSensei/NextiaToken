@@ -1,0 +1,7 @@
+cat > .env.example <<EOF
+PRIVATE_KEY=
+ALCHEMY_API_KEY=
+ETHERSCAN_API_KEY=
+EOF
+git add .env.example
+git commit -m "Add .env.example"
