@@ -9,6 +9,13 @@ coverage/
 *.log
 .DS_Store
 .vscode/
+node_modules/
+venv/
+.flat/
+results/
+.env
+flat/
+
 
 # Backups y privados
 *.docx
@@ -22,3 +29,4 @@ coverage/
 *.pdf
 *.env
 backups/
+flat
