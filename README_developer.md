@@ -129,7 +129,7 @@ Proyecto basado en **Hardhat** para medición, testeo y optimización.
 Clona el repo y entra a la carpeta:
 
 ```bash
-git clone https://github.com/NextiaSensei/nextia-token.git
+git clone https://github.com/https://github.com/NextiaSensei/NextiaToken.git
 cd nextia-token
 
 npm install
@@ -206,4 +206,67 @@ Para cambios importantes, abre primero un issue para discutir qué te gustaría 
 
 MIT © Nextia
 
+28/09/2025
 
+
+📈 Resultados observados (ejemplos locales)
+
+Ejemplos de una ejecución local del benchmark (Hardhat):
+
+Deploy: ~1,405,708 gas
+
+Transfer: ~54,443 gas
+
+Mint: ~37,383 gas
+
+Burn: ~36,469 gas
+
+Pause: ~28,213 gas
+
+Unpause: ~28,166 gas
+
+Nota: Los valores varían por compilador, configuración y plugins (estos son números observados en tu entorno local). Reportes y archivos con las métricas están en ./reports/ y la salida del benchmark en consola.
+
+🛡️ Seguridad y buenas prácticas
+
+Owner → usar multisig (Gnosis Safe) antes de mainnet.
+
+Auditoría: tests pasan y cobertura 100%, pero se recomienda auditoría externa (Slither + auditor independiente).
+
+No subir .env. Si accidentalmente lo subes: revocar claves y rotarlas.
+
+Revisar roles (mint/pause) y considerar timelock/vesting para asignaciones.
+
+✅ Checklist (corto)
+
+ Hardhat + gas reporter integrado
+
+ Solidity coverage integrado (100%)
+
+ Tests unitarios & seguridad (28/28)
+
+ Benchmark script: scripts/benchmarkGas.js
+
+ Micro-optimizaciones aplicadas (sin romper OpenZeppelin)
+
+🔜 Próximos pasos (prioridad)
+
+Auditoría automática + manual (slither, revisión manual de roles).
+
+Deploy en testnet pública (Sepolia / Holesky).
+
+Scripts de deploy robustos (scripts/deploy.js con verificación etherscan).
+
+CI/CD (GitHub Actions): compile → test → coverage → gas.
+
+Revisión legal/compliance si se busca inversión pública.
+
+🔗 Referencias locales
+
+Cobertura: ./coverage/
+
+Reports de gas: ./reports/ (si configurado)
+
+Benchmark script: scripts/benchmarkGas.js
+
+Tests: test/NextiaToken.test.js y test/NextiaToken.gas.test.js

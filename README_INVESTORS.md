@@ -52,10 +52,10 @@ We're seeking strategic partners and investors to accelerate our growth. Contact
 
 ### 📞 Contact for Investment
 
-**Email:** investments@nextia.com  
-**Telegram:** @NextiaOfficial  
-**Website:** coming soon
-
+**Email:** nextiacorp33@gmail.com  
+**Telegram:** JorgeSensei  
+**Website:** https://nextiamarketing.com/
+##Phone: +52 5635378154
 ---
 
 *This document is for informational purposes only. Always do your own research.*
@@ -66,3 +66,9 @@ NextiaToken/
 ├── contracts/
 ├── scripts/
 └── test/
+
+## Executive summary
+
+Nextia Token (NXT) is an ERC-20 token built for a trading-focused DeFi ecosystem. The project is in active development with a focus on security, gas-feasibility and multi-chain readiness.
+
+> **Important — truth & transparency:** the codebase currently has **comprehensive tests** (100% coverage locally) and gas benchmarking in a development environment. An **independent external audit is recommended** prior to any mainnet issuance.
