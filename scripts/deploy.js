@@ -26,7 +26,7 @@ async function main() {
   const contractAddress = await token.getAddress();
   console.log("✅ NextiaToken desplegado en:", contractAddress);
 
-  // 📂 Guardar datos de despliegue
+  // ---- Guardar datos de despliegue ----
   const deploymentsDir = path.join(__dirname, "..", "deployments");
   if (!fs.existsSync(deploymentsDir)) {
     fs.mkdirSync(deploymentsDir);
@@ -46,10 +46,35 @@ async function main() {
 
   console.log("📂 Guardado en:", filePath);
   console.log("🎉 Deploy finalizado correctamente.");
+
+  // ---- Verificación opcional en Etherscan ----
+  if (hre.network.name !== "hardhat" && hre.network.name !== "localhost") {
+    const waitBlocks = process.env.VERIFY_WAIT_BLOCKS
+      ? parseInt(process.env.VERIFY_WAIT_BLOCKS)
+      : 5;
+    console.log(`⏱ Esperando ${waitBlocks} bloques antes de verificar en Etherscan...`);
+    await token.deployTransaction.wait(waitBlocks);
+
+    try {
+      console.log("🔎 Verificando contrato en Etherscan...");
+      await hre.run("verify:verify", {
+        address: contractAddress,
+        constructorArguments: [initialSupply, deployer.address],
+      });
+      console.log("✅ Verificación finalizada");
+    } catch (err) {
+      console.warn("⚠️ Verificación fallida o ya verificada. Error:");
+      console.warn(err.message || err);
+    }
+  } else {
+    console.log("Local network — se omite verificación.");
+  }
 }
 
 main().catch((err) => {
   console.error("❌ Error en el despliegue:", err);
   process.exitCode = 1;
 });
+
+
 

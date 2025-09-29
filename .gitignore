@@ -9,3 +9,16 @@ coverage/
 *.log
 .DS_Store
 .vscode/
+
+# Backups y privados
+*.docx
+*.xlsx
+*.bak
+*.zip
+*.rar
+*.tar
+*.gz
+*.word
+*.pdf
+*.env
+backups/
