@@ -9,14 +9,16 @@
     "test:local": "HARDHAT_NETWORK=localhost npx hardhat test",
     "compile": "npx hardhat compile",
     "deploy": "npx hardhat run scripts/deploy.js --network localhost",
-    "coverage": "npx hardhat coverage"
+    "coverage": "npx hardhat coverage",
+    "gas": "REPORT_GAS=true npx hardhat test test/NextiaToken.gas.test.js",
+    "gas:all": "REPORT_GAS=true npx hardhat test"
   },
   "author": "George & BroDev",
   "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "hardhat": "^2.22.0",
-    "hardhat-gas-reporter": "^2.3.0",
+    "hardhat-gas-reporter": "^1.0.10",
     "husky": "^9.1.7",
     "solidity-coverage": "^0.8.16"
   },

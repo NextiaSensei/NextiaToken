@@ -7,39 +7,43 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract NextiaToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable {
+    // ===== Variables constantes e inmutables =====
+    string public constant TOKEN_NAME = "NextiaToken";
+    string public constant TOKEN_SYMBOL = "NXT";
+
     constructor(uint256 initialSupply, address initialOwner)
-        ERC20("NextiaToken", "NXT")
+        ERC20(TOKEN_NAME, TOKEN_SYMBOL)
         Ownable(initialOwner)
     {
         _mint(initialOwner, initialSupply);
     }
 
-    // ✅ funciones públicas para pausar / despausar
-    
-    function pause() public onlyOwner {
+    // ===== Funciones externas optimizadas =====
+    function pause() external onlyOwner {
         _pause();
     }
 
-    function unpause() public onlyOwner {
+    function unpause() external onlyOwner {
         _unpause();
     }
     
-    // ✅ permitir mintear tokens nuevos (solo el owner)
-    function mint(address to, uint256 amount) public onlyOwner {
+    function mint(address to, uint256 amount) external onlyOwner {
         _mint(to, amount);
     }
-    
+
     function approve(address spender, uint256 amount) public override whenNotPaused returns (bool) {
     return super.approve(spender, amount);
 }
 
-
-    // ✅ sobrescribir _update para integrar la pausa en transferencias
+    // ===== Transferencias internas =====
     function _update(address from, address to, uint256 value)
         internal
         override(ERC20, ERC20Pausable)
     {
-        super._update(from, to, value);
+        // Usamos unchecked en restas donde ya validamos con require en ERC20
+        unchecked {
+            super._update(from, to, value);
+        }
     }
 }
 

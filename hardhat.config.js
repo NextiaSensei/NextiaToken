@@ -22,13 +22,13 @@ module.exports = {
     apiKey: process.env.ETHERSCAN_API_KEY || ""
   },
   gasReporter: {
-    enabled: true,
+    enabled: process.env.REPORT_GAS ? true : false,
     currency: "USD",
     coinmarketcap: process.env.COINMARKETCAP_API_KEY || "",
     outputFile: "gas-report.txt",
     noColors: true,
     showTimeSpent: true,
-        gasPriceApi: `https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.ETHERSCAN_API_KEY}`
+     gasPriceApi: `https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.ETHERSCAN_API_KEY}`
 
   }
 };
