@@ -1,0 +1,71 @@
+name: Security CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security:
+    name: Compile · Test · Flatten · Slither
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install Python tools (solc-select, slither)
+        run: |
+          python -m pip install --upgrade pip
+          pip install solc-select slither-analyzer
+          # instala y usa la versión de solc que corresponde a tu proyecto
+          solc-select install 0.8.20
+          solc-select use 0.8.20
+
+      - name: Install Node deps
+        run: npm ci
+
+      - name: Compile contracts
+        run: npx hardhat compile
+
+      - name: Run tests
+        run: npx hardhat test
+        env:
+          REPORT_GAS: "false"
+
+      - name: Prepare folders
+        run: mkdir -p flat results
+
+      - name: Flatten contract (clean dotenv logs)
+        run: |
+          DOTENV_QUIET=true npx hardhat flatten contracts/NextiaToken.sol > flat/NextiaToken_flat.sol
+          # quitar las primeras 2 líneas de logs si existen
+          tail -n +3 flat/NextiaToken_flat.sol > flat/NextiaToken_flat_clean.sol
+
+      - name: Run Slither (produce JSON report)
+        # No queremos que warnings simples detengan el pipeline; fail sólo si Slither retorna error grave
+        continue-on-error: true
+        run: slither flat/NextiaToken_flat_clean.sol --json results/slither-report.json
+
+      - name: Upload Slither report
+        uses: actions/upload-artifact@v4
+        with:
+          name: slither-report
+          path: results/slither-report.json
+
+      - name: Upload flattened file (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: flattened-contract
+          path: flat/NextiaToken_flat_clean.sol
