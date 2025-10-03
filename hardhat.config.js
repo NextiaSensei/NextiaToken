@@ -10,10 +10,7 @@ module.exports = {
       {
         version: "0.8.20",
         settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200
-          }
+          optimizer: { enabled: true, runs: 200 }
         }
       }
     ]
@@ -29,19 +26,13 @@ module.exports = {
       chainId: 11155111
     },
     holesky: {
-      // RPC público (puedes cambiar por tu proveedor: Alchemy/Infura/Ankr/ThirdWeb)
       url: process.env.HOLESKY_RPC || "https://ethereum-holesky-rpc.publicnode.com",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 17000
     }
   },
   etherscan: {
-    // Usa la misma API key de Etherscan (válida para testnets según su nueva API v2)
-    apiKey: {
-      sepolia: process.env.ETHERSCAN_API_KEY || "",
-      holesky: process.env.ETHERSCAN_API_KEY || ""
-    },
-    // Si la red es muy nueva (como Holesky en algunos setups) puedes declarar customChains
+    apiKey: process.env.ETHERSCAN_API_KEY, // simplificado para evitar warnings
     customChains: [
       {
         network: "holesky",
@@ -53,6 +44,9 @@ module.exports = {
       }
     ]
   },
+  sourcify: {
+    enabled: true // activa verificación automática
+  },
   gasReporter: {
     enabled: process.env.REPORT_GAS ? true : false,
     currency: "USD",
@@ -60,12 +54,8 @@ module.exports = {
     outputFile: "gas-report.txt",
     noColors: true,
     showTimeSpent: true,
-    // fallback para consultar gas price si quieres:
     gasPriceApi: `https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.ETHERSCAN_API_KEY || ""}`
   },
-  mocha: {
-    timeout: 200000
-  }
+  mocha: { timeout: 200000 }
 };
-
 
