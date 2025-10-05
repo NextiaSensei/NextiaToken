@@ -13,11 +13,11 @@
     "gas": "REPORT_GAS=true npx hardhat test test/NextiaToken.gas.test.js",
     "gas:all": "REPORT_GAS=true npx hardhat test",
     "ci": "npx hardhat test && REPORT_GAS=true npx hardhat test && npx hardhat coverage",
-"coverage": "npx hardhat coverage",
-"admin:status": "ACTION=status node scripts/admin.js",
-  "admin:mint": "ACTION=mint node scripts/admin.js",
-  "admin:pause": "ACTION=pause node scripts/admin.js",
-  "admin:unpause": "ACTION=unpause node scripts/admin.js"
+    "admin:status": "ACTION=status node scripts/admin.js",
+    "admin:mint": "ACTION=mint node scripts/admin.js",
+    "admin:pause": "ACTION=pause node scripts/admin.js",
+    "admin:unpause": "ACTION=unpause node scripts/admin.js",
+    "report:html": "npx hardhat test -- --reporter mochawesome --reporter-options reportDir=reports,reportFilename=index,quiet=true,overwrite=true,html=true,json=true"
 
   },
   "author": "George & BroDev",
@@ -28,6 +28,10 @@
     "hardhat": "^2.26.3",
     "hardhat-gas-reporter": "^1.0.10",
     "husky": "^9.1.7",
+    "mocha": "^11.7.4",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^4.3.0",
+    "mochawesome-report-generator": "^6.2.0",
     "prettier": "^3.6.2",
     "solhint": "^6.0.1",
     "solidity-coverage": "^0.8.16"

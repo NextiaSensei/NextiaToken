@@ -1,3 +1,8 @@
+![Build Status](https://github.com/NextiaSensei/NextiaToken/actions/workflows/ci.yml/badge.svg)
+![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
+![Gas Efficiency](https://img.shields.io/badge/gas--efficiency-97%25-success)
+
+
 # 🚀 Nextia Token (NXT)
 
 **Nextia Token (NXT)** es un token ERC-20 optimizado y auditado que impulsa el ecosistema **Nextia**, integrando servicios de marketing digital, inteligencia artificial, trading y comercio electrónico en un solo universo descentralizado.

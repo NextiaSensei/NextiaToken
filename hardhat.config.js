@@ -5,76 +5,55 @@ require("solidity-coverage");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  defaultNetwork: "hardhat",
-
+  defaultNetwork: "hardhat", // 🔥 tests más rápidos en memoria
   solidity: {
-  compilers: [
-    {
-      version: "0.8.20",
-      settings: {
-        optimizer: { enabled: true, runs: 999999 },
-        viaIR: true
+    version: "0.8.20",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200
       }
     }
-  ]
-},
-
-
+  },
   networks: {
     hardhat: {},
     localhost: { url: "http://127.0.0.1:8545" },
-
     sepolia: {
-      url: process.env.ALCHEMY_API_KEY
-        ? `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
-        : process.env.SEPOOLIA_RPC || "",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 11155111,
+      url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : []
     },
-
-    holesky: {
-      url:
-        process.env.HOLESKY_RPC ||
-        "https://ethereum-holesky-rpc.publicnode.com",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 17000,
-    },
+    // 🟣 Preparado para Polygon o BSC si lo deseas más adelante
+    // mumbai: {
+    //   url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+    //   accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : []
+    // }
   },
-
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
-    customChains: [
-      {
-        network: "holesky",
-        chainId: 17000,
-        urls: {
-          apiURL: "https://api-holesky.etherscan.io/api",
-          browserURL: "https://holesky.etherscan.io",
-        },
-      },
-    ],
+    apiKey: process.env.ETHERSCAN_API_KEY || ""
   },
-
-  sourcify: {
-    enabled: true, // verificación automática del contrato
-  },
-
   gasReporter: {
-    enabled: process.env.REPORT_GAS ? true : false,
+    enabled: true,
     currency: "USD",
     coinmarketcap: process.env.COINMARKETCAP_API_KEY || "",
-    outputFile: "gas-report.txt",
+    outputFile: "gas-report.html", // ⚙️ genera también HTML
     noColors: true,
     showTimeSpent: true,
-    showMethodSig: true, // muestra la firma de la función
-    showIntrinsicGas: true, // gas base de cada transacción
-    gasPriceApi: `https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${
-      process.env.ETHERSCAN_API_KEY || ""
-    }`,
+    reportFormats: ["txt", "html"], // dual: texto + HTML
+    gasPriceApi: `https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.ETHERSCAN_API_KEY}`
   },
-
   mocha: {
-    timeout: 200000,
-  },
+    timeout: 20000,
+    reporter: "mochawesome",
+    reporterOptions: {
+      reportDir: "reports",
+      reportFilename: "index",
+      quiet: true,
+      overwrite: true,
+      html: true,
+      json: true
+    }
+  }
 };
+
+
 
