@@ -14,7 +14,10 @@
     "gas:all": "REPORT_GAS=true npx hardhat test",
     "ci": "npx hardhat test && REPORT_GAS=true npx hardhat test && npx hardhat coverage",
 "coverage": "npx hardhat coverage",
-"test:gas": "REPORT_GAS=true npx hardhat test"
+"admin:status": "ACTION=status node scripts/admin.js",
+  "admin:mint": "ACTION=mint node scripts/admin.js",
+  "admin:pause": "ACTION=pause node scripts/admin.js",
+  "admin:unpause": "ACTION=unpause node scripts/admin.js"
 
   },
   "author": "George & BroDev",

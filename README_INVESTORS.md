@@ -124,3 +124,107 @@ Website: https://nextiamarketing.com/
 ---
 
 *This document contains forward-looking statements. Always conduct independent due diligence.*
+
+
+## 💰 **2️⃣ README_investors.md**  
+### ➤ Propósito:
+Documento para inversionistas y holders interesados en el valor, utilidad y visión del token.
+
+Crea el archivo `/README_investors.md` 👇  
+
+---
+
+```markdown
+# 💰 NextiaToken — Investor Overview (v0.5 Pre-Mainnet)
+
+**NextiaToken ($NXTA)** es el activo digital central del ecosistema **Nextia**, diseñado para impulsar proyectos de marketing, tecnología y comunidad web3.  
+
+Esta versión (v0.5) marca la **etapa Pre-Mainnet**, con auditoría completa, pruebas exitosas y documentación técnica verificada.
+
+---
+
+## 🌍 1. Visión
+
+NextiaToken representa **energía, transparencia y crecimiento** dentro del ecosistema Nextia.  
+Su propósito es **conectar tecnología, creatividad y valor real** para crear una economía digital autónoma.
+
+> “No solo un token: una llave hacia la comunidad del futuro.”
+
+---
+
+## 🧭 2. Roadmap 2025
+
+| Etapa | Descripción | Estado |
+|--------|-------------|---------|
+| **v0.1 - v0.4** | Contrato base, test, seguridad y auditoría interna | ✅ Completado |
+| **v0.5 (actual)** | Pre-Mainnet + documentación pública + dashboard dev | 🚀 Activa |
+| **v0.6** | Optimización, CI/CD y despliegue público | 🕓 En curso |
+| **v0.7+** | Integración con dApps Nextia y staking | 🔮 Planeado |
+
+---
+
+## 🪙 3. Tokenomics
+
+| Concepto | Valor |
+|-----------|--------|
+| **Símbolo** | NXTA |
+| **Red actual** | Ethereum (Sepolia Testnet) |
+| **Suministro total inicial** | 1,000,000 NXTA |
+| **Propiedad** | 100% asignado al deployer (Nextia Labs) |
+| **Política de emisión** | Controlado por `onlyOwner` |
+| **Funcionalidades** | Mint, Burn, Pause, Unpause |
+
+---
+
+## 🔐 4. Seguridad y transparencia
+
+- Auditoría interna con **100% cobertura de pruebas**  
+- Código público y verificable en Etherscan  
+- Eventos de transparencia on-chain (`Transfer`, `Approval`, `Burn`, `Mint`)  
+- Compatible con estándares ERC-20  
+
+> El contrato está diseñado bajo la filosofía de “**Security-First, Simplicity-Always**”.
+
+---
+
+## ⚙️ 5. Verificación pública
+
+Una vez desplegado en Mainnet, el contrato podrá verificarse en:  
+[Etherscan – NextiaToken](https://etherscan.io) *(en desarrollo)*  
+
+---
+
+## 🌐 6. Ecosistema Nextia
+
+NextiaToken alimentará:
+- **Nextia Marketing** — economía interna y servicios web3  
+- **TokenLab** — incubadora de proyectos cripto  
+- **NextiaVerse** — comunidad digital y recompensas  
+
+---
+
+## 📊 7. Datos técnicos
+
+| Parámetro | Detalle |
+|------------|----------|
+| **Contrato actual (testnet)** | `0x...` |
+| **Compilador Solidity** | 0.8.28 |
+| **Framework** | Hardhat |
+| **Red testnet** | Sepolia |
+| **Gas promedio (deploy)** | 815,697 gas |
+| **Cobertura** | 100% de líneas, funciones y branches |
+
+---
+
+## 🤝 8. Contacto oficial
+
+🌐 [nextiamarketing.com](https://nextiamarketing.com) (tokenlab.nextiamarketing.com) 
+📧 nextiacorp33@gmail.com  
+🐦 Twitter/X: 
+💬 Telegram: 
+
+---
+
+> “Invertir en NextiaToken es creer que el código puede ser arte,  
+> y que la comunidad puede ser capital.”  
+> — *Nextia Labs, 2025*

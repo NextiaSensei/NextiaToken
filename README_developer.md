@@ -1,4 +1,5 @@
 # 🚀 Nextia Token (NXT)
+# 🧠 NextiaToken — Developer Documentation (v0.5 Pre-Mainnet)
 
 ![Security](https://img.shields.io/badge/Audit-In_Progress-yellow)
 ![Status](https://img.shields.io/badge/Status-Testnet_Deployed-green)
@@ -15,200 +16,121 @@
 
 ## 🎯 Visión del Proyecto
 
-Nextia Token es el **token utility** del ecosistema Nextia, diseñado para:
+Bienvenido al **repositorio de desarrollo de NextiaToken**, el token central del ecosistema Nextia.  
+Este documento guía a los desarrolladores que deseen **compilar, testear, desplegar o auditar** el contrato.
 
-### 🎯 Objetivos Principales
-- **🔐 Seguridad y Confianza**: Token auditado y verificado
-- **🔄 Utilidad Real**: Servicios de marketing, trading y data science
-- **👥 Comunidad Activa**: Governance y participación comunitaria
-- **🌐 Multi-servicio**: Integración con shop online, IA y trading
+---
 
-### 💡 Casos de Uso
-1. **Pagos en servicios Nextia Marketing**
-2. **Acceso a herramientas IA de data science**
-3. **Recompensas en plataforma de trading**
-4. **Governance y votación comunitaria**
+## ⚙️ 1. Requisitos previos
 
-## 🚀 Estado Actual
+Asegúrate de tener instalado:
 
-### ✅ **LOGROS COMPLETADOS**
-- [x] Contrato ERC20 desplegado en **Sepolia**
-- [x] 28/28 tests pasando (100% coverage)
-- [x] Análisis de seguridad con Slither
-- [x] Optimización de gas completada
-- [x] Verificación en Etherscan
+- **Node.js** ≥ 18.0.0  
+- **npm** ≥ 9  
+- **Hardhat**  
+- **Git**  
+- **Cuenta en [Alchemy](https://www.alchemy.com)**  
+- **Wallet MetaMask (con red Sepolia)**  
 
-### 🔄 **EN PROGRESO**
-- [ ] Corrección script de deploy
-- [ ] Documentación completa
-- [ ] Preparación para mainnet
+> ⚠️ Nota: Hardhat no recomienda versiones de Node.js superiores a 18.16 — idealmente usa `18.16.x` para evitar advertencias.
 
-### 📊 **MÉTRICAS CLAVE**
+---
+
+## 🧩 2. Clonar y configurar entorno
+
 ```bash
-📍 Contrato: 0x070E012007a0A523807be9b7BF7589C7395AdEE2
-🔗 Blockchain: Ethereum Sepolia
-💎 Token: NXT (18 decimales)
-📈 Supply: 1,000,000 NXT
-
-🛠 Instalación y Uso
-node.js >= 18
+git clone https://github.com/NextiaLabs/NextiaToken.git
+cd NextiaToken
 npm install
 
-🔧 Comandos Esenciales
-# Compilar
-npx hardhat compile
-
-# Tests
-npx hardhat test
-
-# Deploy local
-npx hardhat run scripts/deploy.js --network localhost
-
-# Deploy Sepolia
-npx hardhat run scripts/deploy.js --network sepolia
-
-⚙️ Configuración
-Crear archivo .env:
-# 🔑 Clave privada de la wallet (testnet)
-# Formato: 0x seguido de 64 caracteres hexadecimales (ejemplo, generado desde tu MetaMask en Sepolia)
-PRIVATE_KEY=TU_PRIVATE_KEY_AQUI
-
-# wallets extra para pruebas multiusuario en Sepolia
-TEST_WALLET_2_PRIVATE_KEY
-TEST_WALLET_3_PRIVATE_KEY
-
-# 🔌 API key de Alchemy (para conectarte a la red Sepolia)
-ALCHEMY_API_KEY=tu_key
-
-# 📜 API key de Etherscan (para verificar contratos si quieres)
-ETHERSCAN_API_KEY=tu_etherscan_key
-
-# 📝 Dirección del contrato desplegado (opcional, se llenará después del deploy)
-NOMBRE_CONTRACT=TU_DIRECCIÓN_DE_CONTRATO
-
-COINMARKETCAP_API_KEY=TU_API_KEY
+Crea tu archivo .env (o copia el ejemplo .env.example):
+PRIVATE_KEY=0x...
+ALCHEMY_API_KEY=...
+ETHERSCAN_API_KEY=...
+COINMARKETCAP_API_KEY=...
 REPORT_GAS=true
-VERITY_WAIT_BLOCKS=5
-HOLESKY_RPC=https://ethereum-holesky-rpc.publicnode.com  # opcional, usa tu pro>
-
-📊 Métricas Técnicas
-⛽ Optimización de Gas
-Función	Gas Used	Estado
-Deploy	815,697	✅ Óptimo
-Transfer	53,772	✅ Excelente
-Mint	53,816	✅ Excelente
-Burn	36,124	✅ Excelente
-Pause	27,787	✅ Excelente
-🧪 Coverage de Tests
-Tests Funcionales: 9/9 ✅
-
-Tests Seguridad: 13/13 ✅
-
-Tests Gas: 6/6 ✅
-
-Total: 28/28 (100%) ✅
-
-🔐 Seguridad
-✅ Implementado
-Pausable pattern
-
-Role-based access control
-
-Comprehensive testing
-
-Slither analysis
-
-🛡 Próximas Mejoras
-Auditoría externa
-
-Multisig implementation
-
-Timelock controller
-
-🤝 Para Inversionistas
-💼 Oportunidad de Inversión
-Nextia Token representa la columna vertebral del ecosistema Nextia, integrando:
-
-Nextia Marketing (Servicios existentes)
-
-Nextia Trading (Plataforma en desarrollo)
-
-Nextia AI (Asistentes de data science)
-
-Nextia Shop (E-commerce)
-
-📈 Tokenomics (Propuesta)
-Concepto	Detalles
-Total Supply	1,000,000 NXT
-Initial Distribution	TBD
-Use Cases	Payments, Governance, Staking
-Vesting	Plan por implementar
-🔗 Contacto Inversiones
-Email: nextiacorp33@gmail.com
-Telegram: @JorgeSensei
-Sitio Web: https://nextiamarketing.com/
-
-📈 Roadmap
-🟢 FASE 1: FUNDAMENTOS (COMPLETADA)
-Contrato ERC20 básico
-
-Tests de seguridad
-
-Deploy en testnet
-
-🟡 FASE 2: ECOSISTEMA (EN PROGRESO)
-Definición tokenomics completa
-
-Desarrollo DApp básica
-
-Programa de recompensas comunidad
-
-🟠 FASE 3: CRECIMIENTO (PRÓXIMA)
-Launch en mainnet
-
-Listado en DEXs
-
-Integración con servicios existentes
-
-🔴 FASE 4: EXPANSIÓN (FUTURO)
-Nextia AI integration
-
-Cross-chain implementation
-
-Enterprise solutions
-
-📜 Licencia
-MIT © Nextia 2025
-
-❓ Soporte
-Para consultas técnicas: Issues en GitHub
-Para negocios: nextiacorp33@gmail.com
 
 
-📂 Estructura del proyecto
+🚀 3. Comandos esenciales
+Comando	Acción
+npx hardhat compile	Compila los contratos Solidity
+npx hardhat test	Ejecuta todas las pruebas (Mocha/Chai)
+npx hardhat coverage	Genera reporte de cobertura (solidity-coverage)
+REPORT_GAS=true npx hardhat test	Muestra consumo de gas por operación
+npx hardhat run scripts/deploy.js --network sepolia	Despliega contrato en Sepolia
+npx hardhat verify --network sepolia <address>	Verifica contrato en Etherscan
 
-    ├── contracts/         # Contratos inteligentes (NextiaToken.sol)
-    ├── scripts/           # Scripts de deploy (deploy.js)
-    ├── test/              # Tests en JS/TS
-    ├── deployments/       # JSON con direcciones y ABI tras cada deploy
-    ├── node_modules/      # Dependencias de npm (ignorar en git)
-    ├── hardhat.config.js  # Configuración principal
-    ├── package.json       # Dependencias y scripts npm
-    ├── .env               # Variables privadas (no subir a git)
-    └── README.md          # Documentación del proyecto
+🧪 4. Estructura de archivos
+
+NextiaToken/
+│
+├── contracts/
+│   └── NextiaToken.sol
+│
+├── test/
+│   ├── NextiaToken.extra.test.js
+│   ├── NextiaToken.gas.test.js
+│   ├── NextiaToken.security.test.js
+│   └── ...
+│
+├── scripts/
+│   ├── deploy.js
+│   ├── verify.js
+│   └── status.js
+│
+├── .env
+├── hardhat.config.js
+└── README_developer.md
 
 
-nextia-token/
-│── contracts/
-│   └── NextiaToken.sol       # Contrato ERC20
-│── scripts/
-│   ├── gasReport.js          # Script para medir gas
-│   └── test-gas-helpers.js   # Helper de gas
-│── test/
-│   └── NextiaToken.gas.test.js # Pruebas de gas
-│── hardhat.config.js
-│── package.json
-│── .env                      # Variables privadas (ignorado en Git)
-│── .gitignore
+🛡️ 5. Seguridad y auditoría
+El contrato incluye:
+
+Patrón Ownable + Pausable (control total del owner)
+
+Eventos Transfer y Approval verificados
+
+Protección contra reentrancy
+
+Control estricto de mint y burn
+
+Pruebas completas (100% coverage)
+
+Para auditorías externas, recomendamos:
+
+MythX
+
+Slither
+
+Solhint
+
+🌐 6. Redes soportadas
+Red	Status	Explorador
+Hardhat local	✅ activo	—
+Sepolia Testnet	✅ activo	https://sepolia.etherscan.io
+Ethereum Mainnet	🕓 planificado (fase v0.6)	—
+
+🤝 7. Contribución
+Si deseas contribuir:
+
+Crea un fork del repo
+
+Crea una rama feature/nueva-funcionalidad
+
+Envía tu Pull Request
+
+Antes de enviar, asegúrate de que todos los tests pasen (npx hardhat test).
+
+🧭 8. Estado actual del proyecto
+Módulo	Estado	Cobertura
+Core ERC20	✅ Completado	100%
+Seguridad	✅ Completado	100%
+Gas Optimization	✅ Completado	—
+Dashboard Dev	⚙️ En desarrollo (fase 5.1)	
+Documentación	✅ Pre-Mainnet (fase 5.2)	
+CI/CD	🕓 Próxima fase (v0.6)	
+
+🪙 9. Licencia
+Este proyecto está bajo licencia MIT — libre uso y modificación con atribución.
 
 

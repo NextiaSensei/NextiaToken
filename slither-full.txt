@@ -4128,7 +4128,7 @@ INFO:Printers:
 	## Structures
 # ERC20
 	- Declaration: node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#29 (19 - 25)
-	- Implementation(s): ['node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol#14-39 (1 - 2)', 'contracts/NextiaToken.sol#9-48 (1 - 2)', 'node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol#22-33 (1 - 2)']
+	- Implementation(s): ['contracts/NextiaToken.sol#9-48 (1 - 2)', 'node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol#14-39 (1 - 2)', 'node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol#22-33 (1 - 2)']
 	- References: ['node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol#14 (45 - 50)', 'node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol#22 (36 - 41)', 'contracts/NextiaToken.sol#9 (25 - 30)', 'contracts/NextiaToken.sol#41 (18 - 23)', 'contracts/NextiaToken.sol#15 (9 - 14)', 'contracts/NextiaToken.sol#15 (9 - 14)']
 
 	## Function
@@ -4178,7 +4178,7 @@ INFO:Printers:
 			- References: ['node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#101 (9 - 18)', 'node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#145 (9 - 18)']
 		- ERC20._update(address,address,uint256)
 			- Declaration: node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#176 (14 - 22)
-			- Implementation(s): ['contracts/NextiaToken.sol#39-47 (5 - 6)', 'node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol#30-32 (5 - 6)', 'node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#176-204 (5 - 6)']
+			- Implementation(s): ['node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#176-204 (5 - 6)', 'contracts/NextiaToken.sol#39-47 (5 - 6)', 'node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol#30-32 (5 - 6)']
 			- References: ['node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#166 (9 - 16)', 'node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#218 (9 - 16)', 'node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#233 (9 - 16)']
 		- ERC20._mint(address,uint256)
 			- Declaration: node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#214 (14 - 20)
@@ -4302,7 +4302,7 @@ INFO:Printers:
 			- References: []
 		- IERC20Metadata.symbol()
 			- Declaration: node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol#20 (14 - 21)
-			- Implementation(s): ['node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#60-62 (5 - 6)', 'node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol#20 (5 - 61)']
+			- Implementation(s): ['node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol#20 (5 - 61)', 'node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#60-62 (5 - 6)']
 			- References: []
 		- IERC20Metadata.decimals()
 			- Declaration: node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol#25 (14 - 23)
@@ -4314,7 +4314,7 @@ INFO:Printers:
 	## Structures
 # Context
 	- Declaration: node_modules/@openzeppelin/contracts/utils/Context.sol#16 (19 - 27)
-	- Implementation(s): ['node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#29-305 (1 - 2)', 'node_modules/@openzeppelin/contracts/access/Ownable.sol#20-100 (1 - 2)', 'node_modules/@openzeppelin/contracts/utils/Pausable.sol#17-112 (1 - 2)', 'node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol#14-39 (1 - 2)']
+	- Implementation(s): ['node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#29-305 (1 - 2)', 'node_modules/@openzeppelin/contracts/access/Ownable.sol#20-100 (1 - 2)', 'node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol#14-39 (1 - 2)', 'node_modules/@openzeppelin/contracts/utils/Pausable.sol#17-112 (1 - 2)']
 	- References: ['node_modules/@openzeppelin/contracts/access/Ownable.sol#20 (30 - 37)', 'node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol#29 (28 - 35)', 'node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol#14 (36 - 43)', 'node_modules/@openzeppelin/contracts/utils/Pausable.sol#17 (31 - 38)']
 
 	## Function
@@ -4762,25 +4762,25 @@ INFO:Printers:{
             "transferFrom(address,address,uint256)": [
                 [
                     {
-                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-                        "type": "uint256"
-                    }
-                ],
-                [
-                    {
                         "value": "0",
                         "type": "address"
                     }
                 ],
                 [
                     {
-                        "value": "True",
-                        "type": "bool"
+                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+                        "type": "uint256"
                     }
                 ],
                 [
                     {
                         "value": "False",
+                        "type": "bool"
+                    }
+                ],
+                [
+                    {
+                        "value": "True",
                         "type": "bool"
                     }
                 ]
@@ -4826,25 +4826,25 @@ INFO:Printers:{
             "transferFrom(address,address,uint256)": [
                 [
                     {
-                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-                        "type": "uint256"
-                    }
-                ],
-                [
-                    {
                         "value": "0",
                         "type": "address"
                     }
                 ],
                 [
                     {
-                        "value": "True",
-                        "type": "bool"
+                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+                        "type": "uint256"
                     }
                 ],
                 [
                     {
                         "value": "False",
+                        "type": "bool"
+                    }
+                ],
+                [
+                    {
+                        "value": "True",
                         "type": "bool"
                     }
                 ]
@@ -4860,14 +4860,14 @@ INFO:Printers:{
             "burnFrom(address,uint256)": [
                 [
                     {
-                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-                        "type": "uint256"
+                        "value": "0",
+                        "type": "address"
                     }
                 ],
                 [
                     {
-                        "value": "0",
-                        "type": "address"
+                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+                        "type": "uint256"
                     }
                 ],
                 [
@@ -4918,25 +4918,25 @@ INFO:Printers:{
             "transferFrom(address,address,uint256)": [
                 [
                     {
-                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-                        "type": "uint256"
-                    }
-                ],
-                [
-                    {
                         "value": "0",
                         "type": "address"
                     }
                 ],
                 [
                     {
-                        "value": "True",
-                        "type": "bool"
+                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+                        "type": "uint256"
                     }
                 ],
                 [
                     {
                         "value": "False",
+                        "type": "bool"
+                    }
+                ],
+                [
+                    {
+                        "value": "True",
                         "type": "bool"
                     }
                 ]
@@ -4984,25 +4984,25 @@ INFO:Printers:{
             "transferFrom(address,address,uint256)": [
                 [
                     {
-                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-                        "type": "uint256"
-                    }
-                ],
-                [
-                    {
                         "value": "0",
                         "type": "address"
                     }
                 ],
                 [
                     {
-                        "value": "True",
-                        "type": "bool"
+                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+                        "type": "uint256"
                     }
                 ],
                 [
                     {
                         "value": "False",
+                        "type": "bool"
+                    }
+                ],
+                [
+                    {
+                        "value": "True",
                         "type": "bool"
                     }
                 ]
@@ -5018,14 +5018,14 @@ INFO:Printers:{
             "burnFrom(address,uint256)": [
                 [
                     {
-                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-                        "type": "uint256"
+                        "value": "0",
+                        "type": "address"
                     }
                 ],
                 [
                     {
-                        "value": "0",
-                        "type": "address"
+                        "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+                        "type": "uint256"
                     }
                 ],
                 [
