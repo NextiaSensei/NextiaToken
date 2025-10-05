@@ -30,7 +30,7 @@ Construir un puente entre los servicios del mundo real y el poder de la blockcha
 | 💎 Token | NXT |
 | 🧮 Decimales | 18 |
 | 🪙 Suministro | 1,000,000 NXT |
-| 📜 Contrato | `0x61d0969006E0Fd98De6b378Fcd42C449397Fc044` |
+| 📜 Contrato | `0x` |
 
 ---
 
