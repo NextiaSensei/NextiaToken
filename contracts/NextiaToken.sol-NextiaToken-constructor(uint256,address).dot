@@ -1,0 +1,13 @@
+digraph{
+0[label="ENTRY_POINT
+id: 0"];
+1[label="EXPRESSION _mint(initialOwner,initialSupply)
+id: 1"];
+3->1;
+2[label="EXPRESSION ERC20(TOKEN_NAME,TOKEN_SYMBOL)
+id: 2"];
+0->2;
+3[label="EXPRESSION Ownable(initialOwner)
+id: 3"];
+2->3;
+}

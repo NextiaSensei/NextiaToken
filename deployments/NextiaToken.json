@@ -1,9 +1,9 @@
 {
   "name": "NextiaToken",
-  "address": "0xD32D1165130e86010edEa97B39EEb1324e9f3651",
+  "address": "0x1c4052b7E5b6D6eeF3bf52FAe6b259759D7D68Bc",
   "network": "sepolia",
   "deployer": "0x52f7B01617a00e93b1e49772AE6FAff4FEe5D53B",
-  "timestamp": "2025-10-03T20:44:01.092Z",
+  "timestamp": "2025-10-05T01:10:02.392Z",
   "abi": [
     {
       "type": "constructor",

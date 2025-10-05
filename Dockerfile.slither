@@ -1,0 +1,14 @@
+FROM python:3.10-slim
+
+# Dependencias apt
+RUN apt-get update && apt-get install -y curl git build-essential graphviz jq
+
+# Instalar slither y evm-cfg-builder (para summary evm)
+RUN pip install --no-cache-dir slither-analyzer evm-cfg-builder
+
+# Instalamos solc estático (versión 0.8.21 como ejemplo)
+RUN curl -L https://github.com/ethereum/solidity/releases/download/v0.8.21/solc-static-linux -o /usr/bin/solc && \
+    chmod +x /usr/bin/solc
+
+WORKDIR /code
+ENTRYPOINT ["slither"]

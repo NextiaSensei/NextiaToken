@@ -1,0 +1,27 @@
+digraph "" {
+c262_Ownable -> c887_Context;
+c262_Ownable[shape="box"label=< <TABLE border="0"><TR><TD align="center"><B>Ownable</B></TD></TR><TR><TD align="left"><I>Private Functions:</I></TD></TR><TR><TD align="left">    _checkOwner()</TD></TR><TR><TD align="left">    _transferOwnership(address)</TD></TR><TR><TD align="left"><I>Modifiers:</I></TD></TR><TR><TD align="left">    onlyOwner()</TD></TR><TR><TD align="left"><I>Private Variables:</I></TD></TR><TR><TD align="left">    _owner</TD></TR></TABLE> >];
+
+c777_ERC20 -> c887_Context;
+c777_ERC20[shape="box"label=< <TABLE border="0"><TR><TD align="center"><B>ERC20</B></TD></TR><TR><TD align="left"><I>Private Functions:</I></TD></TR><TR><TD align="left">    _transfer(address,address,uint256)</TD></TR><TR><TD align="left">    _update(address,address,uint256)</TD></TR><TR><TD align="left">    _mint(address,uint256)</TD></TR><TR><TD align="left">    _burn(address,uint256)</TD></TR><TR><TD align="left">    _approve(address,address,uint256)</TD></TR><TR><TD align="left">    _approve(address,address,uint256,bool)</TD></TR><TR><TD align="left">    _spendAllowance(address,address,uint256)</TD></TR><TR><TD align="left"><I>Private Variables:</I></TD></TR><TR><TD align="left">    _balances</TD></TR><TR><TD align="left">    _allowances</TD></TR><TR><TD align="left">    _totalSupply</TD></TR><TR><TD align="left">    _name</TD></TR><TR><TD align="left">    _symbol</TD></TR></TABLE> >];
+
+c823_ERC20Burnable -> c887_Context [ label="1" ];
+c823_ERC20Burnable -> c777_ERC20 [ label="2" ];
+c823_ERC20Burnable[shape="box"label=< <TABLE border="0"><TR><TD align="center"><B>ERC20Burnable</B></TD></TR></TABLE> >];
+
+c857_ERC20Pausable -> c777_ERC20 [ label="1" ];
+c857_ERC20Pausable -> c1236_Pausable [ label="2" ];
+c857_ERC20Pausable[shape="box"label=< <TABLE border="0"><TR><TD align="center"><B>ERC20Pausable</B></TD></TR><TR><TD align="left"><I>Private Functions:</I></TD></TR><TR><TD align="left"><font color="#FFA500">    _update(address,address,uint256)</font></TD></TR></TABLE> >];
+
+c887_Context[shape="box"label=< <TABLE border="0"><TR><TD align="center"><B>Context</B></TD></TR><TR><TD align="left"><I>Private Functions:</I></TD></TR><TR><TD align="left">    _msgSender()</TD></TR><TR><TD align="left">    _msgData()</TD></TR><TR><TD align="left">    _contextSuffixLength()</TD></TR></TABLE> >];
+
+c1236_Pausable -> c887_Context;
+c1236_Pausable[shape="box"label=< <TABLE border="0"><TR><TD align="center"><B>Pausable</B></TD></TR><TR><TD align="left"><I>Private Functions:</I></TD></TR><TR><TD align="left">    _requireNotPaused()</TD></TR><TR><TD align="left">    _requirePaused()</TD></TR><TR><TD align="left">    _pause()</TD></TR><TR><TD align="left">    _unpause()</TD></TR><TR><TD align="left"><I>Modifiers:</I></TD></TR><TR><TD align="left">    whenNotPaused()</TD></TR><TR><TD align="left">    whenPaused()</TD></TR><TR><TD align="left"><I>Private Variables:</I></TD></TR><TR><TD align="left">    _paused</TD></TR></TABLE> >];
+
+c114_NextiaToken -> c777_ERC20 [ label="1" ];
+c114_NextiaToken -> c823_ERC20Burnable [ label="2" ];
+c114_NextiaToken -> c857_ERC20Pausable [ label="3" ];
+c114_NextiaToken -> c262_Ownable [ label="4" ];
+c114_NextiaToken[shape="box"label=< <TABLE border="0"><TR><TD align="center"><B>NextiaToken</B></TD></TR><TR><TD align="left"><I>Public Functions:</I></TD></TR><TR><TD align="left">    pause()</TD></TR><TR><TD align="left">    unpause()</TD></TR><TR><TD align="left">    mint(address,uint256)</TD></TR><TR><TD align="left"><font color="#FFA500">    approve(address,uint256)</font></TD></TR><TR><TD align="left"><I>Private Functions:</I></TD></TR><TR><TD align="left"><font color="#FFA500">    _update(address,address,uint256)</font></TD></TR><TR><TD align="left"><I>Public Variables:</I></TD></TR><TR><TD align="left">    TOKEN_NAME</TD></TR><TR><TD align="left">    TOKEN_SYMBOL</TD></TR></TABLE> >];
+
+}

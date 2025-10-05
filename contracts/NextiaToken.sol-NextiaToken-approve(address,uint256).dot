@@ -1,0 +1,10 @@
+digraph{
+0[label="ENTRY_POINT
+id: 0"];
+1[label="RETURN super.approve(spender,amount)
+id: 1"];
+2->1;
+2[label="EXPRESSION whenNotPaused()
+id: 2"];
+0->2;
+}

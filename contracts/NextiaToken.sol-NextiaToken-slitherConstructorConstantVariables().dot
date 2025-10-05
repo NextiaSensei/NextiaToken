@@ -1,0 +1,6 @@
+digraph{
+0[label="OTHER_ENTRYPOINT TOKEN_NAME = NextiaToken
+id: 0"];
+1[label="OTHER_ENTRYPOINT TOKEN_SYMBOL = NXT
+id: 1"];
+}
