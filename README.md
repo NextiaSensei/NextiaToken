@@ -3,6 +3,13 @@
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Coverage](https://img.shields.io/badge/tests-28%2F28-blue)
 ![Gas Efficiency](https://img.shields.io/badge/gas-optimized-40%25-lightgrey)
+# 🧪 Nextia Token (NXT)
+
+![Build Status](https://img.shields.io/github/actions/workflow/status/NextiaSensei/NextiaToken/ci.yml?branch=main)
+![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
+![Gas Efficiency](https://img.shields.io/badge/gas%20usage-optimized-blue)
+![License](https://img.shields.io/badge/license-MIT-yellow)
+
 
 ---
 

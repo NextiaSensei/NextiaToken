@@ -18,7 +18,6 @@
     "admin:pause": "ACTION=pause node scripts/admin.js",
     "admin:unpause": "ACTION=unpause node scripts/admin.js",
     "report:html": "npx hardhat test -- --reporter mochawesome --reporter-options reportDir=reports,reportFilename=index,quiet=true,overwrite=true,html=true,json=true"
-
   },
   "author": "George & BroDev",
   "license": "MIT",
