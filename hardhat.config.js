@@ -3,43 +3,46 @@ require("dotenv").config();
 require("hardhat-gas-reporter");
 require("solidity-coverage");
 
-/** @type import('hardhat/config').HardhatUserConfig */
+const {
+  ALCHEMY_API_KEY,
+  PRIVATE_KEY_TEST,
+  PRIVATE_KEY_MAIN,
+  ETHERSCAN_API_KEY,
+  COINMARKETCAP_API_KEY
+} = process.env;
+
 module.exports = {
-  defaultNetwork: "hardhat", // 🔥 tests más rápidos en memoria
+  defaultNetwork: "hardhat",
   solidity: {
     version: "0.8.20",
     settings: {
-      optimizer: {
-        enabled: true,
-        runs: 200
-      }
+      optimizer: { enabled: true, runs: 200 }
     }
   },
   networks: {
     hardhat: {},
     localhost: { url: "http://127.0.0.1:8545" },
     sepolia: {
-      url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : []
+      url: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+      accounts: PRIVATE_KEY_TEST ? [PRIVATE_KEY_TEST] : []
     },
-    // 🟣 Preparado para Polygon o BSC si lo deseas más adelante
-    // mumbai: {
-    //   url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-    //   accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : []
-    // }
+    mainnet: {
+      url: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+      accounts: PRIVATE_KEY_MAIN ? [PRIVATE_KEY_MAIN] : []
+    }
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY || ""
+    apiKey: ETHERSCAN_API_KEY || ""
   },
   gasReporter: {
     enabled: true,
     currency: "USD",
-    coinmarketcap: process.env.COINMARKETCAP_API_KEY || "",
-    outputFile: "gas-report.html", // ⚙️ genera también HTML
+    coinmarketcap: COINMARKETCAP_API_KEY || "",
+    outputFile: "gas-report.html",
     noColors: true,
     showTimeSpent: true,
-    reportFormats: ["txt", "html"], // dual: texto + HTML
-    gasPriceApi: `https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.ETHERSCAN_API_KEY}`
+    reportFormats: ["txt", "html"],
+    gasPriceApi: `https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${ETHERSCAN_API_KEY}`
   },
   mocha: {
     timeout: 20000,
@@ -54,6 +57,5 @@ module.exports = {
     }
   }
 };
-
 
 
