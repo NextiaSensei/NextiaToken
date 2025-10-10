@@ -1,0 +1,11 @@
+
+{
+  "nextia_ecosystem": true,
+  "version": "1.0.0",
+  "mode": "development",
+  "security_level": "high",
+  "transparency": {
+    "public_logs": true,
+    "community_auditable": true
+  }
+}
