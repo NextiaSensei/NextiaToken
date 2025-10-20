@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-10-19T17:46:47.244658",
+  "total_invested": 4540.0,
+  "total_current": 8243.4135,
+  "total_profit_loss": 3703.4135000000006,
+  "total_profit_loss_percent": 81.5729845814978,
+  "holdings": {
+    "BTC": {
+      "amount": 0.05,
+      "buy_price": 45000,
+      "current_price": 108767.17,
+      "invested": 2250.0,
+      "current_value": 5438.3585,
+      "profit_loss": 3188.3585000000003,
+      "profit_loss_percent": 141.70482222222222
+    },
+    "ETH": {
+      "amount": 0.5,
+      "buy_price": 3000,
+      "current_price": 3993.31,
+      "invested": 1500.0,
+      "current_value": 1996.655,
+      "profit_loss": 496.655,
+      "profit_loss_percent": 33.11033333333333
+    },
+    "ADA": {
+      "amount": 1000,
+      "buy_price": 0.45,
+      "current_price": 0.6573,
+      "invested": 450.0,
+      "current_value": 657.3,
+      "profit_loss": 207.29999999999995,
+      "profit_loss_percent": 46.066666666666656
+    },
+    "DOT": {
+      "amount": 50,
+      "buy_price": 6.8,
+      "current_price": 3.022,
+      "invested": 340.0,
+      "current_value": 151.1,
+      "profit_loss": -188.9,
+      "profit_loss_percent": -55.55882352941177
+    }
+  },
+  "summary": {
+    "status": "\ud83d\udfe2 EN GANANCIAS",
+    "emoji": "\ud83d\udcc8",
+    "roi": "81.57%"
+  }
+}
