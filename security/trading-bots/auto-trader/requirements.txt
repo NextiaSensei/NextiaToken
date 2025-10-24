@@ -1,0 +1,12 @@
+ccxt==4.1.76
+pandas==2.1.4
+numpy==1.25.2
+websocket-client==1.6.4
+python-dotenv==1.0.0
+cryptography==41.0.7
+schedule==1.2.0
+requests==2.31.0
+telegram-send==0.15.1
+python-telegram-bot==20.7
+matplotlib==3.7.2
+seaborn==0.12.2
