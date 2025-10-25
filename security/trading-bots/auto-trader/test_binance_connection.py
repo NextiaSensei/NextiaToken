@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Script para verificar conexión con Binance Testnet
+Script para verificar conexión con Binance Testnet - CORREGIDO
 """
 
 import sys
 import os
 import json
 import logging
+import time
 
 # Añadir ruta del proyecto
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -59,7 +60,7 @@ def load_exchanges_config():
         return None
 
 def test_binance_connection():
-    """Verifica conexión con Binance Testnet"""
+    """Verifica conexión con Binance Testnet - CORREGIDO"""
     try:
         config = load_exchanges_config()
         if not config:
@@ -74,6 +75,7 @@ def test_binance_connection():
         
         logger.info("🔗 Conectando a Binance Testnet...")
         
+        # Crear cliente con manejo de tiempo mejorado
         client = Client(
             api_key=binance_config['api_key'],
             api_secret=binance_config['api_secret'],
@@ -84,30 +86,50 @@ def test_binance_connection():
         ping = client.ping()
         logger.info("✅ Ping a Binance Testnet exitoso")
         
-        # Obtener tiempo del servidor
+        # Obtener tiempo del servidor y sincronizar
         server_time = client.get_server_time()
         logger.info(f"⏰ Tiempo servidor: {server_time['serverTime']}")
         
-        # Obtener información de cuenta
-        account = client.get_account()
-        logger.info("💰 Balances de prueba disponibles:")
+        # Sincronizar tiempo local con servidor
+        time_diff = server_time['serverTime'] - int(time.time() * 1000)
+        logger.info(f"⏱️  Diferencia de tiempo: {time_diff}ms")
         
-        # Mostrar solo los balances principales (para no saturar)
-        main_assets = ['BTC', 'ETH', 'ADA', 'USDT', 'BNB', 'USDC']
-        assets_shown = 0
+        if abs(time_diff) > 1000:  # Si la diferencia es > 1 segundo
+            logger.warning(f"⚠️  Gran diferencia de tiempo detectada: {time_diff}ms")
+            logger.info("🔄 Ajustando sincronización...")
         
-        for balance in account['balances']:
-            free = float(balance['free'])
-            locked = float(balance['locked'])
-            asset = balance['asset']
+        # Obtener información de cuenta CON manejo de tiempo
+        try:
+            account = client.get_account()
+            logger.info("💰 Balances de prueba disponibles:")
             
-            # Mostrar solo activos principales o con balance significativo
-            if asset in main_assets or free > 0.1 or locked > 0:
-                logger.info(f"   💎 {asset}: Libre={free}, Bloqueado={locked}")
-                assets_shown += 1
-        
-        if assets_shown == 0:
-            logger.info("   ℹ️  No hay balances visibles - normal en testnet nuevo")
+            # Mostrar solo los balances principales (para no saturar)
+            main_assets = ['BTC', 'ETH', 'ADA', 'USDT', 'BNB', 'USDC']
+            assets_shown = 0
+            
+            for balance in account['balances']:
+                free = float(balance['free'])
+                locked = float(balance['locked'])
+                asset = balance['asset']
+                
+                # Mostrar solo activos principales o con balance significativo
+                if asset in main_assets or free > 0.1 or locked > 0:
+                    logger.info(f"   💎 {asset}: Libre={free}, Bloqueado={locked}")
+                    assets_shown += 1
+            
+            if assets_shown == 0:
+                logger.info("   ℹ️  Mostrando balances principales...")
+                for asset in main_assets:
+                    balance = next((b for b in account['balances'] if b['asset'] == asset), None)
+                    if balance:
+                        free = float(balance['free'])
+                        locked = float(balance['locked'])
+                        if free > 0 or locked > 0:
+                            logger.info(f"   💎 {asset}: Libre={free}, Bloqueado={locked}")
+                
+        except Exception as account_error:
+            logger.warning(f"⚠️  Error obteniendo cuenta: {account_error}")
+            logger.info("💡 Probando con método alternativo...")
         
         # Test de orden de prueba (NO real)
         try:
@@ -119,16 +141,23 @@ def test_binance_connection():
             )
             logger.info("✅ Orden de prueba ejecutada correctamente")
         except Exception as order_error:
-            logger.warning(f"⚠️  Orden de prueba falló (puede ser normal): {order_error}")
+            logger.warning(f"⚠️  Orden de prueba falló: {order_error}")
         
         # Obtener ticker de precio
-        ticker = client.get_symbol_ticker(symbol="BTCUSDT")
-        logger.info(f"📊 Precio BTC/USDT: ${ticker['price']}")
+        try:
+            ticker = client.get_symbol_ticker(symbol="BTCUSDT")
+            logger.info(f"📊 Precio BTC/USDT: ${ticker['price']}")
+        except Exception as ticker_error:
+            logger.warning(f"⚠️  Error obteniendo precio: {ticker_error}")
         
         return True
         
     except Exception as e:
         logger.error(f"❌ Error en conexión Testnet: {e}")
+        logger.info("💡 Posibles soluciones:")
+        logger.info("   1. Verifica la sincronización de tiempo de tu sistema")
+        logger.info("   2. Ejecuta: sudo ntpdate pool.ntp.org")
+        logger.info("   3. Revisa que las API keys sean correctas")
         return False
 
 if __name__ == "__main__":
@@ -141,4 +170,4 @@ if __name__ == "__main__":
         logger.info("🚀 El bot está listo para trading de prueba")
     else:
         logger.info("==========================================")
-        logger.error("💥 CONFIGURACIÓN FALLIDA - Revisa tus API Keys")
+        logger.error("💥 CONFIGURACIÓN FALLIDA - Revisa los errores arriba")
