@@ -7,6 +7,8 @@ from datetime import datetime
 from utils.logger import trading_logger
 from utils.config_loader import config
 from utils.notifications import notifier
+from data.database import trading_db
+from data.technical_analysis import technical_analyzer
 
 class RealTimeMarketData:
     def __init__(self):
@@ -17,12 +19,14 @@ class RealTimeMarketData:
         self.current_prices = {}
         self.price_history = {}
         self.volume_data = {}
+        self.last_signal_time = {}  # 🔥 NUEVO: Control de tiempo entre señales
         self.setup_websocket()
         
         # Inicializar datos históricos
         for symbol in self.symbols:
             self.price_history[symbol] = []
             self.volume_data[symbol] = []
+            self.last_signal_time[symbol] = 0
 
     def setup_websocket(self):
         """Configurar conexión WebSocket a Binance"""
@@ -78,10 +82,87 @@ class RealTimeMarketData:
         if len(self.price_history[symbol]) > 100:
             self.price_history[symbol] = self.price_history[symbol][-100:]
         
+        # 🔥 NUEVO: GUARDAR EN BASE DE DATOS
+        trading_db.save_price_data(symbol, price, volume)
+        
+        # 🔥 NUEVO: ANÁLISIS TÉCNICO Y SEÑALES
+        self.generate_trading_signals(symbol, price, volume)
+        
         # Log cada minuto para no saturar
         current_time = int(time.time())
         if current_time % 60 == 0:  # Log cada minuto
             trading_logger.info(f"📊 {symbol}: ${price:.2f} ({change_percent:+.2f}%) - Vol: {volume:.0f}")
+
+    def generate_trading_signals(self, symbol, price, volume):
+        """Generar señales de trading usando análisis técnico"""
+        try:
+            # 🔥 MEJORA: Evitar señales repetidas muy seguidas
+            current_time = time.time()
+            last_signal = self.last_signal_time.get(symbol, 0)
+            
+            # Solo procesar señales cada 10 minutos para el mismo símbolo
+            if current_time - last_signal < 600:  # 10 minutos entre señales
+                return
+            
+            # Obtener datos históricos de la base de datos (últimas 24 horas)
+            historical_prices = trading_db.get_recent_prices(symbol, hours=24)
+            
+            # Necesitamos suficientes datos para análisis
+            if len(historical_prices) >= 50:
+                # Generar señales e indicadores
+                signals, indicators = technical_analyzer.generate_signals(
+                    symbol, price, historical_prices
+                )
+                
+                # 🔥 GUARDAR INDICADORES EN BASE DE DATOS
+                trading_db.save_technical_indicators(symbol, indicators)
+                
+                # 🔥 PROCESAR SEÑALES FUERTES
+                strong_signals = [s for s in signals if s['strength'] > 0.6]
+                
+                if strong_signals:
+                    # 🔥 MEJORA: Actualizar tiempo de última señal
+                    self.last_signal_time[symbol] = current_time
+                    
+                    # Tomar la señal más fuerte
+                    strongest_signal = max(strong_signals, key=lambda x: x['strength'])
+                    
+                    trading_logger.info(f"🎯 SEÑAL FUERTE: {symbol} - {strongest_signal['message']}")
+                    
+                    # 🔥 NOTIFICACIÓN DE SEÑAL FUERTE
+                    notifier.send_telegram_message(
+                        f"🚨 <b>SEÑAL DE TRADING DETECTADA</b>\n"
+                        f"💎 <b>{symbol}</b>\n"
+                        f"📊 {strongest_signal['message']}\n"
+                        f"💰 Precio actual: ${price:.2f}\n"
+                        f"📈 Volumen: {volume:,.0f}\n"
+                        f"💪 Fuerza de señal: {strongest_signal['strength']*100:.0f}%\n"
+                        f"🕒 {datetime.now().strftime('%H:%M:%S')}"
+                    )
+                    
+                    # 🔥 GUARDAR SEÑAL EN BASE DE DATOS
+                    try:
+                        trading_db.save_trading_signal(
+                            symbol, 
+                            strongest_signal['type'], 
+                            strongest_signal['strength'], 
+                            price
+                        )
+                    except Exception as db_error:
+                        trading_logger.error(f"❌ Error guardando señal en DB: {db_error}")
+                        # Continuar aunque falle el guardado en DB
+            
+            # Log de indicadores cada 5 minutos
+            current_time = int(time.time())
+            if current_time % 300 == 0 and len(historical_prices) >= 50:  # Cada 5 minutos
+                trading_logger.info(
+                    f"📈 {symbol} - SMA20: {indicators.get('sma_20', 0):.2f}, "
+                    f"SMA50: {indicators.get('sma_50', 0):.2f}, "
+                    f"RSI: {indicators.get('rsi', 0):.2f}"
+                )
+                
+        except Exception as e:
+            trading_logger.error(f"❌ Error generando señales para {symbol}: {e}")
 
     def process_kline_data(self, data):
         """Procesar datos de velas (kline)"""
@@ -165,7 +246,20 @@ class RealTimeMarketData:
 
     def get_current_price(self, symbol):
         """Obtener precio actual de un símbolo"""
-        return self.current_prices.get(symbol)
+        # Intentar diferentes formatos de símbolo
+        formats_to_try = [
+            symbol,
+            symbol.replace("/", ""),
+            symbol.replace("/", "").upper(),
+            symbol.upper(),
+            symbol.replace("/", "-"),
+        ]
+        
+        for symbol_format in formats_to_try:
+            if symbol_format in self.current_prices:
+                return self.current_prices[symbol_format]
+        
+        return None
 
     def get_price_history(self, symbol, limit=50):
         """Obtener histórico de precios"""
@@ -176,6 +270,25 @@ class RealTimeMarketData:
     def get_all_prices(self):
         """Obtener todos los precios actuales"""
         return self.current_prices
+
+    def get_technical_indicators(self, symbol):
+        """🔥 NUEVO: Obtener indicadores técnicos actuales"""
+        try:
+            # Obtener datos históricos
+            historical_prices = trading_db.get_recent_prices(symbol, hours=24)
+            current_price = self.get_current_price(symbol)
+            
+            if historical_prices and current_price and len(historical_prices) >= 50:
+                signals, indicators = technical_analyzer.generate_signals(
+                    symbol, current_price, historical_prices
+                )
+                return indicators, signals
+            else:
+                return {}, []
+                
+        except Exception as e:
+            trading_logger.error(f"❌ Error obteniendo indicadores para {symbol}: {e}")
+            return {}, []
 
 # Instancia global del mercado
 market_data = RealTimeMarketData()

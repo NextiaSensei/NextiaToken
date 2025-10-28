@@ -1,0 +1,63 @@
+{
+  "max_position_size_percent": 2.0,
+  "stop_loss_percent": 3.0,
+  "take_profit_percent": 6.0,
+  "max_open_trades": 4,
+  "daily_loss_limit_percent": 10.0,
+  "risk_reward_ratio": 2.0,
+  "max_portfolio_allocation_per_asset": 40,
+  "min_position_value": 10.0,
+  "max_position_value": 2000.0,
+  "confidence_threshold": 0.6,
+  "auto_cleanup_trades": true,
+  "reject_weak_signals": false,
+  "cleanup_timeout_minutes": 4,
+  "cooldown_per_trade": 30,
+  "volatility_adjustment": true,
+  "dynamic_position_sizing": true,
+  "max_daily_trades": 50,
+  "emergency_stop_loss": 10.0,
+  
+  "mejoras_agregadas": {
+    "position_sizing_strategy": "dynamic",
+    "confidence_threshold": 0.6,
+    "price_cache_timeout_seconds": 5,
+    "max_retry_attempts": 3,
+    "balance_update_interval_seconds": 30,
+    "daily_metrics_reset": "00:00",
+    "min_trade_amount_usdt": 10.0
+  },
+  
+  "risk_management": {
+    "max_drawdown_percent": 15.0,
+    "volatility_adjustment": true,
+    "correlation_limits": {
+      "max_correlated_pairs": 2,
+      "correlation_threshold": 0.7
+    },
+    "sector_exposure_limits": {
+      "max_sector_exposure_percent": 25.0
+    }
+  },
+  
+  "trading_hours": {
+    "active": true,
+    "start_time": "09:30",
+    "end_time": "16:00",
+    "timezone": "America/New_York"
+  },
+  
+  "symbols_config": {
+    "allowed_symbols": ["BTCUSDT", "ETHUSDT", "ADAUSDT", "DOTUSDT"],
+    "blacklist": [],
+    "min_volume_usdt": 1000000,
+    "min_price_change_percent": 0.5
+  },
+  
+  "performance_targets": {
+    "daily_profit_target_percent": 2.0,
+    "monthly_profit_target_percent": 15.0,
+    "max_daily_trades": 10,
+    "min_win_rate_percent": 55.0
+  }
+}

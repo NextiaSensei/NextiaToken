@@ -1,0 +1,28 @@
+{
+    "profit_targets": {
+        "BTCUSDT": 2.5,
+        "ETHUSDT": 3.0,
+        "ADAUSDT": 4.0,
+        "DOTUSDT": 3.5
+    },
+    "stop_losses": {
+        "BTCUSDT": 1.5,
+        "ETHUSDT": 2.0,
+        "ADAUSDT": 2.5,
+        "DOTUSDT": 2.0
+    },
+    "trading_sessions": [
+        {
+            "name": "session_1",
+            "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+            "start_time": "09:00",
+            "end_time": "17:00"
+        },
+        {
+            "name": "session_2", 
+            "days": ["saturday"],
+            "start_time": "10:00",
+            "end_time": "14:00"
+        }
+    ]
+}
