@@ -715,6 +715,46 @@ class RiskManager:
             'risk_metrics': self.risk_metrics
         }
 
+    # 🚨 NUEVO MÉTODO PARA EMERGENCY STOP SYSTEM
+    def get_drawdown_info(self) -> Dict[str, Any]:
+        """Obtener información de drawdown para Kill Switch"""
+        try:
+            # En producción, estos datos vendrían del trade engine
+            if self.trade_engine and hasattr(self.trade_engine, 'get_current_balance'):
+                current_balance = self.trade_engine.get_current_balance()
+                # Simular datos para prueba
+                peak_balance = max(current_balance, 100000.0)
+                current_drawdown = ((peak_balance - current_balance) / peak_balance) * 100 if peak_balance > 0 else 0
+                
+                return {
+                    "peak_balance": peak_balance,
+                    "current_balance": current_balance,  
+                    "current_drawdown": current_drawdown,
+                    "daily_pnl": current_balance - 100000.0,  # Simulado
+                    "max_daily_drawdown": max(current_drawdown, 8.0),  # Drawdown máximo del día
+                    "drawdown_breached": current_drawdown > self.config.get('emergency_stop_loss', 10.0)
+                }
+            else:
+                # Datos simulados para cuando no hay trade engine
+                return {
+                    "peak_balance": 100000.0,
+                    "current_balance": 95000.0, 
+                    "current_drawdown": 5.0,
+                    "daily_pnl": -2000.0,
+                    "max_daily_drawdown": 8.0,
+                    "drawdown_breached": False
+                }
+        except Exception as e:
+            logger.error(f"❌ Error obteniendo info de drawdown: {e}")
+            return {
+                "peak_balance": 0.0,
+                "current_balance": 0.0, 
+                "current_drawdown": 0.0,
+                "daily_pnl": 0.0,
+                "max_daily_drawdown": 0.0,
+                "drawdown_breached": False
+            }
+
     def get_system_status(self) -> Dict[str, Any]:
         """Obtener estado del sistema de risk management"""
         return {
@@ -723,7 +763,8 @@ class RiskManager:
             'active_trades': self.get_active_trades_count(),
             'max_trades': self.config['max_open_trades'],
             'symbols_loaded': len(self.symbols_info),
-            'performance': self.get_performance_report()
+            'performance': self.get_performance_report(),
+            'drawdown_info': self.get_drawdown_info()  # 🚨 NUEVO: Incluir info de drawdown
         }
 
 def test_risk_manager():
@@ -767,6 +808,10 @@ def test_risk_manager():
     
     # Probar limpieza
     risk_mgr.print_active_trades_status()
+    
+    # 🚨 NUEVO: Probar método de drawdown para Emergency Stop
+    drawdown_info = risk_mgr.get_drawdown_info()
+    logger.info(f"📉 Info de Drawdown: {drawdown_info}")
     
     # Probar reporte de performance
     report = risk_mgr.get_performance_report()

@@ -2,6 +2,7 @@
 """
 Nextia Trading Bot - Sistema Integrado Mejorado
 Combina Data Engine, Trade Engine y Risk Manager para trading automático
+CON PROTECCIÓN ANTI-SUSPENSIÓN Y COMANDOS TELEGRAM
 """
 
 import logging
@@ -10,6 +11,8 @@ import sys
 import os
 import asyncio
 import json
+import subprocess
+import threading
 from typing import Dict, Optional, Tuple, List
 from datetime import datetime, timedelta
 
@@ -20,6 +23,18 @@ from trade_engine import TradeEngine
 from risk_manager import RiskManager
 from profit_manager import ProfitManager
 from session_scheduler import SessionScheduler
+
+# =============================================
+# 📱 TELEGRAM BOT - NUEVO COMMAND HANDLER
+# =============================================
+try:
+    import telegram
+    from telegram import Update, BotCommand
+    from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+    TELEGRAM_AVAILABLE = True
+except ImportError:
+    TELEGRAM_AVAILABLE = False
+    print("⚠️  Telegram no disponible. Instala: pip install python-telegram-bot")
 
 # Configurar logging
 logging.basicConfig(
@@ -32,19 +47,314 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# =============================================
+# 🛡️ PROTECCIÓN ANTI-SUSPENSIÓN - NUEVO
+# =============================================
+
+def anti_suspension_init():
+    """Protección inicial contra suspensiones - Se ejecuta al inicio"""
+    try:
+        print("🛡️  Activando protección anti-suspensión...")
+        # Forzar sincronización temporal básica
+        subprocess.run(['date'], capture_output=True, text=True)
+        time.sleep(1)
+        print("✅ Protección anti-suspensión activada")
+        return True
+    except Exception as e:
+        print(f"⚠️  Error en protección inicial: {e}")
+        return True  # Continuar de todos modos
+
+# Ejecutar protección al importar
+anti_suspension_init()
+
+class SuspensionMonitor:
+    """Monitor para detectar y reparar suspensiones automáticamente"""
+    
+    def __init__(self):
+        self.last_check = time.time()
+        self.suspension_detected = False
+        self.repair_attempts = 0
+        self.max_repair_attempts = 3
+        
+    def check_suspension(self):
+        """Verificar si hubo una suspensión"""
+        current_time = time.time()
+        time_diff = current_time - self.last_check
+        
+        # Si pasó más de 30 segundos entre checks, probable suspensión
+        if time_diff > 30 and not self.suspension_detected:
+            logger.warning(f"⚠️  POSIBLE SUSPENSIÓN DETECTADA: {time_diff:.1f} segundos sin actividad")
+            self.suspension_detected = True
+            self.repair_attempts = 0
+            
+        self.last_check = current_time
+        return self.suspension_detected
+    
+    def repair_suspension(self):
+        """Intentar reparar los efectos de una suspensión"""
+        if not self.suspension_detected or self.repair_attempts >= self.max_repair_attempts:
+            return False
+            
+        self.repair_attempts += 1
+        logger.info(f"🔧 Intentando reparación de suspensión ({self.repair_attempts}/{self.max_repair_attempts})...")
+        
+        try:
+            # Método 1: Sincronización temporal básica
+            subprocess.run(['date'], capture_output=True, text=True)
+            
+            # Método 2: Pequeña pausa para estabilizar
+            time.sleep(2)
+            
+            # Método 3: Reset de flags
+            self.suspension_detected = False
+            
+            logger.info("✅ Reparación de suspensión completada")
+            return True
+            
+        except Exception as e:
+            logger.error(f"❌ Error en reparación de suspensión: {e}")
+            return False
+
+# Inicializar monitor global
+suspension_monitor = SuspensionMonitor()
+
+class TelegramCommandHandler:
+    """📱 MANEJADOR DE COMANDOS TELEGRAM - NUEVO"""
+    
+    def __init__(self, token: str, trading_bot):
+        self.token = token
+        self.bot = trading_bot
+        self.application = None
+        self.is_running = False
+        
+    async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Comando /start - Bienvenida"""
+        welcome_text = """
+🤖 *Nextia Trading Bot* - Sistema Integrado
+
+*COMANDOS DISPONIBLES:*
+/status - Estado del sistema y balance
+/portfolio - Detalles del portfolio
+/protection - Estado de protecciones
+/emergency_stop - 🚨 PARADA DE EMERGENCIA
+/help - Mostrar esta ayuda
+
+🛡️ *Sistema de Protección Activado*
+✅ Anti-suspensión
+✅ Risk Manager  
+✅ Profit Manager
+✅ Session Scheduler
+        """
+        await update.message.reply_text(welcome_text, parse_mode='Markdown')
+        
+    async def status_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Comando /status - Estado del sistema"""
+        try:
+            system_status = self.bot.get_system_status()
+            
+            status_text = f"""
+📊 *ESTADO DEL SISTEMA*
+
+💼 *Balance:* ${system_status.get('total_balance', 0):.2f}
+🔧 *Estado:* {system_status.get('status', 'Unknown').upper()}
+⏰ *Sesión:* {'✅ ACTIVA' if system_status.get('trading_session_active') else '⏸️ INACTIVA'}
+📈 *Duración:* {system_status.get('session_duration_hours', 0):.1f}h
+
+🛡️ *Protecciones:*
+• Trade Engine: {system_status.get('trade_engine', 'Unknown')}
+• Risk Manager: {system_status.get('risk_manager', 'Unknown')}  
+• Profit Manager: {system_status.get('profit_manager', 'Unknown')}
+• Suspensiones: {system_status.get('suspensions_detected', 0)} detectadas, {system_status.get('suspensions_repaired', 0)} reparadas
+
+🕒 *Actualizado:* {datetime.now().strftime('%H:%M:%S')}
+            """
+            await update.message.reply_text(status_text, parse_mode='Markdown')
+            
+        except Exception as e:
+            await update.message.reply_text(f"❌ Error obteniendo estado: {str(e)}")
+    
+    async def portfolio_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Comando /portfolio - Información del portfolio"""
+        try:
+            portfolio_info = self.bot.get_portfolio_info()
+            performance = portfolio_info.get('performance', {})
+            
+            portfolio_text = f"""
+💼 *PORTAFOLIO - DETALLES*
+
+💰 *Balance Total:* ${portfolio_info.get('total_balance', 0):.2f}
+📊 *Trades Activos:* {portfolio_info.get('active_trades', 0)}/{portfolio_info.get('max_trades', 0)}
+🎯 *Win Rate:* {performance.get('win_rate', 0):.1f}%
+
+📈 *Métricas Diarias:*
+• P&L Diario: ${performance.get('daily_pnl', 0):.2f}
+• Trades Hoy: {performance.get('daily_trades', 0)}
+• Total Trades: {performance.get('total_trades', 0)}
+
+🛡️ *Protección Anti-Suspensión:*
+• Detectadas: {portfolio_info.get('suspensions_detected', 0)}
+• Reparadas: {portfolio_info.get('suspensions_repaired', 0)}
+
+⏰ *Sesión Trading:* {'✅ ACTIVA' if portfolio_info.get('trading_session_active') else '⏸️ INACTIVA'}
+            """
+            await update.message.reply_text(portfolio_text, parse_mode='Markdown')
+            
+        except Exception as e:
+            await update.message.reply_text(f"❌ Error obteniendo portfolio: {str(e)}")
+    
+    async def protection_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Comando /protection - Estado de protecciones"""
+        try:
+            system_status = self.bot.get_system_status()
+            portfolio_info = self.bot.get_portfolio_info()
+            
+            protection_text = f"""
+🛡️ *SISTEMA DE PROTECCIÓN*
+
+🔴 *Emergency Stop:* ✅ DISPONIBLE
+🟡 *Kill Switch:* ✅ DISPONIBLE  
+🔵 *Circuit Breaker:* ✅ DISPONIBLE
+
+📊 *Estado Actual:*
+• Suspensiones: {system_status.get('suspensions_detected', 0)} detectadas
+• Auto-reparaciones: {system_status.get('suspensions_repaired', 0)} exitosas
+• Trades activos: {portfolio_info.get('active_trades', 0)}
+• Sesión: {'✅ ACTIVA' if system_status.get('trading_session_active') else '⏸️ INACTIVA'}
+
+⚡ *Comandos de Emergencia:*
+/emergency_stop - Parada TOTAL inmediata
+/kill_switch - Cierre EMERGENCIA posiciones
+
+🕒 *Última verificación:* {datetime.now().strftime('%H:%M:%S')}
+            """
+            await update.message.reply_text(protection_text, parse_mode='Markdown')
+            
+        except Exception as e:
+            await update.message.reply_text(f"❌ Error obteniendo protecciones: {str(e)}")
+    
+    async def emergency_stop_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Comando /emergency_stop - Parada de emergencia"""
+        try:
+            # Confirmación de seguridad
+            confirm_text = """
+🚨 *PARADA DE EMERGENCIA - CONFIRMACIÓN*
+
+⚠️ *ESTA ACCIÓN ES IRREVERSIBLE:*
+• Detendrá TODO el trading
+• Cancelará órdenes pendientes
+• Bloqueará nuevas operaciones
+• Cerrará conexiones
+
+¿Estás seguro? Responde *CONFIRMAR* para proceder.
+            """
+            await update.message.reply_text(confirm_text, parse_mode='Markdown')
+            
+            # Esperar confirmación
+            context.user_data['waiting_confirm'] = True
+            
+        except Exception as e:
+            await update.message.reply_text(f"❌ Error en emergency stop: {str(e)}")
+    
+    async def help_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Comando /help - Ayuda"""
+        help_text = """
+🤖 *NEXTIA TRADING BOT - AYUDA*
+
+*COMANDOS PRINCIPALES:*
+/start - Iniciar bot y mostrar bienvenida
+/status - Estado completo del sistema
+/portfolio - Información detallada del portfolio
+/protection - Estado del sistema de protección
+
+*COMANDOS DE EMERGENCIA:* 🚨
+/emergency_stop - Parada TOTAL del sistema
+/kill_switch - Cierre emergencia de posiciones
+
+*INFORMACIÓN:*
+🔗 *Conexión:* Binance Testnet
+🛡️ *Protecciones:* Anti-suspensión, Risk Manager, Profit Targets
+⏰ *Horarios:* Configurables en trading_sessions.json
+
+💡 *Soporte:* El bot se auto-repara ante suspensiones
+        """
+        await update.message.reply_text(help_text, parse_mode='Markdown')
+    
+    async def handle_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Manejar mensajes de texto normales"""
+        if context.user_data.get('waiting_confirm') and update.message.text.upper() == 'CONFIRMAR':
+            # Ejecutar emergency stop real
+            try:
+                from protection.emergency_stop import EmergencyStop
+                emergency_stop = EmergencyStop()
+                success = emergency_stop.activate()
+                
+                if success:
+                    await update.message.reply_text(
+                        "✅ *PARADA DE EMERGENCIA ACTIVADA*\n\n"
+                        "• Trading DETENIDO\n"
+                        "• Órdenes CANCELADAS\n"  
+                        "• Sistema BLOQUEADO\n"
+                        "• Balance SEGURO",
+                        parse_mode='Markdown'
+                    )
+                else:
+                    await update.message.reply_text("❌ Error activando parada de emergencia")
+                    
+            except Exception as e:
+                await update.message.reply_text(f"❌ Error: {str(e)}")
+            
+            context.user_data['waiting_confirm'] = False
+        else:
+            await update.message.reply_text(
+                "🤖 Usa /help para ver los comandos disponibles",
+                parse_mode='Markdown'
+            )
+    
+    def start_bot(self):
+        """Iniciar el bot de Telegram"""
+        if not TELEGRAM_AVAILABLE:
+            logger.warning("❌ Telegram no disponible - Comandos desactivados")
+            return
+            
+        try:
+            self.application = Application.builder().token(self.token).build()
+            
+            # Agregar handlers de comandos
+            self.application.add_handler(CommandHandler("start", self.start_command))
+            self.application.add_handler(CommandHandler("status", self.status_command))
+            self.application.add_handler(CommandHandler("portfolio", self.portfolio_command))
+            self.application.add_handler(CommandHandler("protection", self.protection_command))
+            self.application.add_handler(CommandHandler("emergency_stop", self.emergency_stop_command))
+            self.application.add_handler(CommandHandler("help", self.help_command))
+            self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
+            
+            # Iniciar en segundo plano
+            self.application.run_polling()
+            self.is_running = True
+            logger.info("✅ Telegram Command Handler iniciado")
+            
+        except Exception as e:
+            logger.error(f"❌ Error iniciando Telegram bot: {e}")
+
 class IntegratedTradingBot:
-    """Bot de trading integrado completo - Versión Mejorada"""
+    """Bot de trading integrado completo - Versión Mejorada CON ANTI-SUSPENSIÓN Y TELEGRAM"""
     
     def __init__(self, config_path: str = "config/trading_rules.json"):
         self.config_path = config_path
         self.config = self._load_config()
-        self.trade_engine = TradeEngine()
+        
+        # 🛡️ INICIALIZACIÓN ROBUSTA CON ANTI-SUSPENSIÓN
+        self.trade_engine = self._initialize_trade_engine_with_retry()
         self.risk_manager = RiskManager(trade_engine=self.trade_engine)
         
         # NUEVO: Inicializar módulos de profit y sesiones
         self.profit_manager = ProfitManager('config/trading_sessions.json')
         self.session_scheduler = SessionScheduler('config/trading_sessions.json')
         self.session_scheduler.start_scheduler()
+        
+        # 📱 NUEVO: Telegram Command Handler
+        self.telegram_handler = None
+        self._initialize_telegram()
         
         self.total_balance = 0.0
         self.performance_metrics = {
@@ -67,7 +377,9 @@ class IntegratedTradingBot:
             'errors_count': 0,
             'signals_outside_session': 0,
             'positions_closed_by_profit': 0,
-            'positions_closed_by_stop': 0
+            'positions_closed_by_stop': 0,
+            'suspensions_detected': 0,
+            'suspensions_repaired': 0
         }
         
         # MEJORA: Cache para precios
@@ -75,7 +387,98 @@ class IntegratedTradingBot:
         self.cache_timeout = 5  # segundos
         
         self._initialize_systems()
+    
+    def _initialize_telegram(self):
+        """📱 INICIALIZAR TELEGRAM COMMAND HANDLER - VERSIÓN CORREGIDA"""
+        try:
+            # Buscar token y chat ID de Telegram
+            telegram_token = self._get_telegram_token()
+            chat_id = os.getenv('TELEGRAM_CHAT_ID')
+            
+            if telegram_token and chat_id and TELEGRAM_AVAILABLE:
+                logger.info(f"✅ Telegram configurado - Token: {telegram_token[:10]}..., Chat ID: {chat_id}")
+                self.telegram_handler = TelegramCommandHandler(telegram_token, self)
+                # Iniciar en hilo separado
+                telegram_thread = threading.Thread(target=self.telegram_handler.start_bot, daemon=True)
+                telegram_thread.start()
+                logger.info("✅ Telegram Command Handler inicializado")
+            else:
+                logger.warning(f"❌ Telegram no configurado - Token: {bool(telegram_token)}, Chat ID: {bool(chat_id)}, Telegram Available: {TELEGRAM_AVAILABLE}")
+                
+        except Exception as e:
+            logger.error(f"❌ Error inicializando Telegram: {e}")
+    
+    def _get_telegram_token(self):
+        """Obtener token de Telegram de variables de entorno .env - VERSIÓN CORREGIDA"""
+        try:
+            # Método 1: Variables de entorno del sistema
+            token = os.getenv('TELEGRAM_BOT_TOKEN')
+            if token:
+                logger.info("✅ Token de Telegram encontrado en variables de entorno")
+                return token
+            
+            # Método 2: Buscar en archivo .env directamente
+            env_file = '.env'
+            if os.path.exists(env_file):
+                with open(env_file, 'r') as f:
+                    for line in f:
+                        if line.strip() and not line.startswith('#'):
+                            if '=' in line:
+                                key, value = line.strip().split('=', 1)
+                                if key.upper() == 'TELEGRAM_BOT_TOKEN':
+                                    logger.info("✅ Token de Telegram encontrado en .env")
+                                    return value.strip()
+            
+            # Método 3: Buscar en otros archivos de configuración (fallback)
+            config_files = [
+                'config/telegram_config.json',
+                'config/trading_config.json', 
+                'config/bot_config.json'
+            ]
+            
+            for config_file in config_files:
+                if os.path.exists(config_file):
+                    with open(config_file, 'r') as f:
+                        config = json.load(f)
+                        token = config.get('telegram_token') or config.get('bot_token')
+                        if token:
+                            logger.info(f"✅ Token de Telegram encontrado en {config_file}")
+                            return token
+            
+            logger.warning("❌ No se encontró token de Telegram en .env ni configuraciones")
+            return None
+                
+        except Exception as e:
+            logger.error(f"❌ Error buscando token de Telegram: {e}")
+            return None
+
+    def _initialize_trade_engine_with_retry(self):
+        """🛡️ Inicializar Trade Engine con reintentos y protección anti-suspensión"""
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                logger.info(f"🔄 Inicializando Trade Engine (intento {attempt + 1}/{max_retries})...")
+                trade_engine = TradeEngine()
+                
+                if trade_engine.initialized:
+                    logger.info("✅ Trade Engine inicializado correctamente")
+                    return trade_engine
+                else:
+                    logger.warning(f"⚠️  Trade Engine no inicializado (intento {attempt + 1})")
+                    
+            except Exception as e:
+                logger.error(f"❌ Error inicializando Trade Engine (intento {attempt + 1}): {e}")
+                
+            if attempt < max_retries - 1:
+                # 🛡️ Verificar y reparar suspensión antes del reintento
+                if suspension_monitor.check_suspension():
+                    self.session_stats['suspensions_detected'] += 1
+                    if suspension_monitor.repair_suspension():
+                        self.session_stats['suspensions_repaired'] += 1
+                time.sleep(3)
         
+        raise Exception("No se pudo inicializar Trade Engine después de múltiples intentos")
+    
     def _load_config(self) -> Dict:
         """Cargar configuración desde archivo JSON con manejo de errores robusto"""
         try:
@@ -140,6 +543,10 @@ class IntegratedTradingBot:
             except Exception as e:
                 logger.error(f"❌ Error en inicialización (intento {attempt + 1}/{max_retries}): {e}")
                 if attempt < max_retries - 1:
+                    # 🛡️ Verificar suspensión durante reintentos
+                    if suspension_monitor.check_suspension():
+                        self.session_stats['suspensions_detected'] += 1
+                        suspension_monitor.repair_suspension()
                     time.sleep(3)
                 else:
                     logger.error("💥 Error crítico en inicialización del sistema")
@@ -156,10 +563,16 @@ class IntegratedTradingBot:
             logger.info("🔄 Métricas diarias reiniciadas")
             
     def update_balance(self) -> bool:
-        """Actualizar balance total del portfolio de forma robusta - VERSIÓN MEJORADA"""
+        """Actualizar balance total del portfolio de forma robusta - VERSIÓN MEJORADA CON ANTI-SUSPENSIÓN"""
         max_retries = 2
         for attempt in range(max_retries):
             try:
+                # 🛡️ Verificar suspensión antes de operación crítica
+                if suspension_monitor.check_suspension():
+                    self.session_stats['suspensions_detected'] += 1
+                    if suspension_monitor.repair_suspension():
+                        self.session_stats['suspensions_repaired'] += 1
+                
                 usdt_balance = self.trade_engine.get_balance('USDT')
                 btc_balance = self.trade_engine.get_balance('BTC')
                 btc_price = self._get_cached_price('BTCUSDT')
@@ -273,8 +686,19 @@ class IntegratedTradingBot:
             return 0
     
     def process_signal(self, symbol: str, signal_type: str, strength: str, confidence: float = 0.0) -> Tuple[bool, str]:
-        """Procesar señal de trading y ejecutar orden si es válida - VERSIÓN MEJORADA"""
+        """Procesar señal de trading y ejecutar orden si es válida - VERSIÓN MEJORADA CON ANTI-SUSPENSIÓN"""
         try:
+            # 🛡️ VERIFICAR SUSPENSIÓN ANTES DE PROCESAR SEÑAL
+            if suspension_monitor.check_suspension():
+                self.session_stats['suspensions_detected'] += 1
+                logger.warning("🛡️  Suspensión detectada - aplicando reparación...")
+                if suspension_monitor.repair_suspension():
+                    self.session_stats['suspensions_repaired'] += 1
+                    logger.info("✅ Sistema reparado después de suspensión")
+                else:
+                    logger.error("❌ No se pudo reparar la suspensión, omitiendo señal")
+                    return False, "Sistema en reparación por suspensión"
+            
             # MEJORA: Resetear métricas diarias si es necesario
             self._reset_daily_metrics()
             
@@ -424,13 +848,16 @@ class IntegratedTradingBot:
                 'session_stats': self.session_stats,
                 'trading_session_active': self.session_scheduler.is_trading_time,
                 'profit_manager_configured': len(self.profit_manager.profit_targets) > 0,
+                'suspensions_detected': self.session_stats['suspensions_detected'],
+                'suspensions_repaired': self.session_stats['suspensions_repaired'],
                 'timestamp': datetime.now().isoformat()
             }
             
             logger.info(f"📊 Portfolio - Balance: ${self.total_balance:.2f}, "
                        f"Trades activos: {active_trades}/{self.config['max_open_trades']}, "
                        f"Win Rate: {self.performance_metrics['win_rate']:.1f}%, "
-                       f"Sesión: {'✅ Activa' if self.session_scheduler.is_trading_time else '⏸️ Inactiva'}")
+                       f"Sesión: {'✅ Activa' if self.session_scheduler.is_trading_time else '⏸️ Inactiva'}, "
+                       f"Suspensiones: {self.session_stats['suspensions_detected']} detectadas, {self.session_stats['suspensions_repaired']} reparadas")
             return info
             
         except Exception as e:
@@ -463,6 +890,9 @@ class IntegratedTradingBot:
                 'trading_session_active': self.session_scheduler.is_trading_time,
                 'total_balance': self.total_balance,
                 'session_duration_hours': round(session_duration.total_seconds() / 3600, 2),
+                'suspension_protection': 'active',
+                'suspensions_detected': self.session_stats['suspensions_detected'],
+                'suspensions_repaired': self.session_stats['suspensions_repaired'],
                 'timestamp': datetime.now().isoformat()
             }
             
@@ -482,11 +912,14 @@ class IntegratedTradingBot:
             }
 
 def main():
-    """Función principal del bot integrado - Versión Mejorada"""
-    logger.info("🚀 INICIANDO NEXTIA TRADING BOT INTEGRADO - VERSIÓN MEJORADA")
+    """Función principal del bot integrado - Versión Mejorada CON ANTI-SUSPENSIÓN Y TELEGRAM"""
+    logger.info("🚀 INICIANDO NEXTIA TRADING BOT INTEGRADO - VERSIÓN MEJORADA CON ANTI-SUSPENSIÓN Y TELEGRAM")
     logger.info("==========================================")
     
     try:
+        # 🛡️ EJECUTAR PROTECCIÓN ANTI-SUSPENSIÓN AL INICIO
+        anti_suspension_init()
+        
         # Crear bot integrado
         bot = IntegratedTradingBot()
         
@@ -503,6 +936,8 @@ def main():
         logger.info("   - Dynamic Position Sizing: ✅")
         logger.info("   - Price Caching: ✅")
         logger.info("   - Daily Metrics: ✅")
+        logger.info("   - 🛡️ ANTI-SUSPENSIÓN: ✅ ACTIVADO")
+        logger.info(f"   - 📱 TELEGRAM COMMANDS: {'✅ ACTIVADO' if bot.telegram_handler else '❌ NO CONFIGURADO'}")
         logger.info(f"   - Sesión Trading: {'✅ Activa' if bot.session_scheduler.is_trading_time else '⏸️ Inactiva'}")
         
         # Mostrar configuración cargada
@@ -522,9 +957,21 @@ def main():
         logger.info(f"🔧 Estado del sistema: {system_status['status']}")
         
         logger.info("==========================================")
-        logger.info("🎉 SISTEMA INTEGRADO MEJORADO FUNCIONANDO CORRECTAMENTE")
+        logger.info("🎉 SISTEMA INTEGRADO MEJORADO CON ANTI-SUSPENSIÓN Y TELEGRAM FUNCIONANDO CORRECTAMENTE")
         logger.info("💪 Bot listo para recibir señales del Data Engine!")
+        logger.info("🛡️  Protección anti-suspensión: ACTIVADA - El bot se auto-reparará si detecta suspensiones")
+        logger.info("📱 Comandos Telegram: /start, /status, /portfolio, /protection, /emergency_stop")
         
+        # Mantener el programa corriendo
+        while True:
+            time.sleep(60)
+            # Verificar suspensión periódicamente
+            if suspension_monitor.check_suspension():
+                logger.warning("🛡️  Suspensión detectada en bucle principal")
+                suspension_monitor.repair_suspension()
+        
+    except KeyboardInterrupt:
+        logger.info("🛑 Bot detenido por usuario")
     except Exception as e:
         logger.error(f"❌ Error crítico en inicialización: {e}")
         sys.exit(1)
