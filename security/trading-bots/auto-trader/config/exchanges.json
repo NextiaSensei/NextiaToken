@@ -1,0 +1,16 @@
+{
+  "binance": {
+    "testnet": true,
+    "api_key": "BINANCE_TESTNET_API_KEY",
+    "api_secret": "BINANCE_TESTNET_SECRET_KEY", 
+    "sandbox": true,
+    "rate_limit": 1200,
+    "verbose": false
+  },
+  "kucoin": {
+    "api_key": "KUCOIN_API_KEY",
+    "api_secret": "KUCOIN_SECRET_KEY",
+    "password": "KUCOIN_PASSWORD",
+    "sandbox": true
+  }
+}

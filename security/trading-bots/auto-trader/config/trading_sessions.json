@@ -1,0 +1,83 @@
+{
+    "profit_targets": {
+        "BTCUSDT": 2.5,
+        "ETHUSDT": 3.0,
+        "ADAUSDT": 4.0,
+        "DOTUSDT": 3.5,
+        "LINKUSDT": 3.5
+    },
+    "stop_losses": {
+        "BTCUSDT": 1.5,
+        "ETHUSDT": 2.0,
+        "ADAUSDT": 2.5,
+        "DOTUSDT": 2.0,
+        "LINKUSDT": 2.0
+    },
+    "trailing_stops": {
+        "BTCUSDT": 1.0,
+        "ETHUSDT": 1.2,
+        "ADAUSDT": 1.5,
+        "DOTUSDT": 1.5,
+        "LINKUSDT": 1.3
+    },
+    "position_sizing": {
+        "max_position_per_trade": 0.2,
+        "max_daily_trades": 8,
+        "volatility_adjustment": true,
+        "max_portfolio_risk": 0.02
+    },
+    "daily_limits": {
+        "max_daily_loss": 0.02,
+        "max_drawdown": 0.05,
+        "daily_profit_target": 0.04,
+        "emergency_stop_loss": 0.03
+    },
+    "risk_profiles": {
+        "BTCUSDT": {
+            "risk_level": "low",
+            "volatility": "medium"
+        },
+        "ETHUSDT": {
+            "risk_level": "medium", 
+            "volatility": "high"
+        },
+        "ADAUSDT": {
+            "risk_level": "high",
+            "volatility": "high"
+        },
+        "DOTUSDT": {
+            "risk_level": "high",
+            "volatility": "high"
+        },
+        "LINKUSDT": {
+            "risk_level": "medium",
+            "volatility": "medium"
+        }
+    },
+    "trading_sessions": [
+        {
+            "name": "session_1",
+            "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+            "start_time": "09:00",
+            "end_time": "17:00"
+        },
+        {
+            "name": "session_2", 
+            "days": ["saturday"],
+            "start_time": "10:00",
+            "end_time": "14:00"
+        }
+    ],
+    "emergency_settings": {
+        "max_consecutive_losses": 3,
+        "volatility_threshold": 0.05,
+        "auto_stop_on_high_volatility": true,
+        "recovery_mode_after_loss": true
+    },
+    "performance_optimization": {
+        "enable_trailing_stops": true,
+        "dynamic_position_sizing": true,
+        "profit_compounding": true,
+        "risk_adjustment_by_time": true
+    }
+}
