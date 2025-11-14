@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nextia TradingBot Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* [MANTENGO EXACTAMENTE TODOS TUS ESTILOS ORIGINALES] */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap');
 
         * {
@@ -160,7 +162,6 @@
             font-weight: 600;
         }
 
-        /* Contenedor con scroll limitado para Performance del Balance */
         .performance-container {
             flex: 1;
             overflow-y: auto;
@@ -168,7 +169,6 @@
             padding-right: 10px;
         }
 
-        /* Personalización de la barra de scroll */
         .performance-container::-webkit-scrollbar {
             width: 6px;
         }
@@ -187,7 +187,6 @@
             background: rgba(0, 212, 255, 0.5);
         }
 
-        /* Simulación de contenido del gráfico */
         .chart-placeholder {
             background: linear-gradient(135deg, var(--bg-darker), var(--bg-card));
             border-radius: 8px;
@@ -246,7 +245,6 @@
             font-weight: 500;
         }
 
-        /* Scrollbar general */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -272,9 +270,21 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        /* Nuevos estilos para datos dinámicos */
+        .loading {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        
+        #lastUpdate {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        #performanceChart {
+            width: 100% !important;
+            height: 300px !important;
         }
     </style>
 </head>
@@ -283,27 +293,28 @@
         <div class="dashboard-header">
             <h1 class="dashboard-title">Nextia TradingBot Dashboard</h1>
             <p class="dashboard-subtitle">Monitoreo en tiempo real del bot de trading algorítmico</p>
+            <div class="metric-status" id="lastUpdate">Última actualización: --:--:--</div>
         </div>
 
         <div class="metrics-grid">
             <div class="metric-card">
                 <div class="metric-label">BALANCE TOTAL</div>
-                <div class="metric-value">$0.00</div>
-                <div class="metric-status">Cargando...</div>
+                <div class="metric-value" id="currentBalance">$0.00</div>
+                <div class="metric-status" id="balanceStatus">Cargando...</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">TRADES ACTIVOS</div>
-                <div class="metric-value">0</div>
+                <div class="metric-value" id="activeTrades">0</div>
                 <div class="metric-status">En tiempo real</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">GANANCIA HOY</div>
-                <div class="metric-value">$0.00</div>
-                <div class="metric-status">✔️</div>
+                <div class="metric-value" id="todayPnl">$0.00</div>
+                <div class="metric-status" id="pnlStatus">✔️</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">WIN RATE</div>
-                <div class="metric-value">0.0%</div>
+                <div class="metric-value" id="winRate">0.0%</div>
                 <div class="metric-status">24 horas</div>
             </div>
         </div>
@@ -311,93 +322,280 @@
         <div class="content-grid">
             <div class="content-card">
                 <div class="card-header">
-                    <span class="card-icon">✔</span>
+                    <span class="card-icon">📈</span>
                     <h2 class="card-title">Performance del Balance</h2>
                 </div>
                 <div class="performance-container">
-                    <div class="chart-placeholder">
-                        Gráfico de rendimiento del balance
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Rendimiento hoy:</span>
-                        <span class="data-value positive">+0.5%</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Rendimiento semanal:</span>
-                        <span class="data-value positive">+2.3%</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Rendimiento mensual:</span>
-                        <span class="data-value positive">+8.7%</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Máximo histórico:</span>
-                        <span class="data-value">$12,450</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Mínimo histórico:</span>
-                        <span class="data-value">$8,230</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Volatilidad:</span>
-                        <span class="data-value">2.4%</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Sharpe Ratio:</span>
-                        <span class="data-value positive">1.8</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Drawdown máximo:</span>
-                        <span class="data-value negative">-12.3%</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Recuperación:</span>
-                        <span class="data-value positive">+15.7%</span>
+                    <canvas id="performanceChart"></canvas>
+                    <div id="performanceMetrics">
+                        <div class="chart-data">
+                            <span class="data-label">Rendimiento hoy:</span>
+                            <span class="data-value positive" id="todayPerformance">+0.0%</span>
+                        </div>
+                        <div class="chart-data">
+                            <span class="data-label">Rendimiento semanal:</span>
+                            <span class="data-value positive" id="weeklyPerformance">+0.0%</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="content-card">
                 <div class="card-header">
-                    <span class="card-icon">☺</span>
+                    <span class="card-icon">📊</span>
                     <h2 class="card-title">Métricas de Trading</h2>
                 </div>
-                <div class="metrics-container">
+                <div class="metrics-container" id="tradingMetrics">
                     <div class="metric-row">
                         <span class="metric-name">Total de trades:</span>
-                        <span class="metric-number">0</span>
+                        <span class="metric-number" id="totalTrades">0</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-name">Trades ganadores:</span>
-                        <span class="metric-number">0</span>
+                        <span class="metric-number" id="winningTrades">0</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-name">Trades perdedores:</span>
-                        <span class="metric-number">0</span>
+                        <span class="metric-number" id="losingTrades">0</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-name">Ratio ganancia/pérdida:</span>
-                        <span class="metric-number">0.0</span>
+                        <span class="metric-number" id="winLossRatio">0.0</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-name">Expectativa matemática:</span>
-                        <span class="metric-number">$0.00</span>
+                        <span class="metric-number" id="avgPnl">$0.00</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-name">Tiempo promedio en trade:</span>
-                        <span class="metric-number">0m</span>
+                        <span class="metric-number" id="avgTradeTime">0m</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-name">Trades por día:</span>
-                        <span class="metric-number">0</span>
+                        <span class="metric-number" id="tradesPerDay">0</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-name">Comisiones pagadas:</span>
-                        <span class="metric-number">$0.00</span>
+                        <span class="metric-number" id="totalCommissions">$0.00</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        class NextiaTradingDashboard {
+            constructor() {
+                this.performanceChart = null;
+                this.lastData = null;
+                this.init();
+            }
+
+            init() {
+                this.loadData();
+                // Actualizar cada 5 segundos
+                setInterval(() => this.loadData(), 5000);
+            }
+
+            async loadData() {
+                try {
+                    console.log('🔄 Cargando datos del dashboard...');
+                    
+                    const [dashboardResponse, statusResponse] = await Promise.all([
+                        fetch('/api/dashboard-data'),
+                        fetch('/api/system-status')
+                    ]);
+
+                    if (!dashboardResponse.ok || !statusResponse.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+
+                    const dashboardData = await dashboardResponse.json();
+                    const systemStatus = await statusResponse.json();
+
+                    console.log('📊 Datos recibidos:', dashboardData);
+                    
+                    this.updateDashboard(dashboardData, systemStatus);
+                    this.updateLastUpdate();
+
+                } catch (error) {
+                    console.error('❌ Error cargando datos:', error);
+                    this.showError('Error conectando con el servidor');
+                }
+            }
+
+            updateDashboard(data, status) {
+                // Actualizar métricas principales
+                this.updateMainMetrics(data);
+                
+                // Actualizar gráfico de performance
+                this.updatePerformanceChart(data.performance_history || []);
+                
+                // Actualizar métricas de trading
+                this.updateTradingMetrics(data.metrics || {});
+                
+                this.lastData = data;
+            }
+
+            updateMainMetrics(data) {
+                const balance = data.current_balance || 0;
+                const metrics = data.metrics || {};
+                
+                console.log('💰 Actualizando balance:', balance);
+                
+                // Balance actual
+                const balanceElement = document.getElementById('currentBalance');
+                const balanceStatus = document.getElementById('balanceStatus');
+                
+                balanceElement.textContent = `$${balance.toFixed(2)}`;
+                balanceStatus.textContent = balance > 0 ? '✅ Balance actual' : '⚠️ Sin fondos';
+                balanceStatus.className = `metric-status ${balance > 0 ? 'positive' : 'negative'}`;
+                
+                // Trades activos
+                document.getElementById('activeTrades').textContent = metrics.total_trades || '0';
+                
+                // P&L del día
+                const todayPnl = metrics.total_pnl || 0;
+                const pnlElement = document.getElementById('todayPnl');
+                const pnlStatus = document.getElementById('pnlStatus');
+                
+                pnlElement.textContent = `$${todayPnl.toFixed(2)}`;
+                pnlElement.className = `metric-value ${todayPnl >= 0 ? 'positive' : 'negative'}`;
+                pnlStatus.textContent = todayPnl >= 0 ? '📈 Ganancia' : '📉 Pérdida';
+                pnlStatus.className = `metric-status ${todayPnl >= 0 ? 'positive' : 'negative'}`;
+                
+                // Win Rate
+                const winRate = metrics.win_rate || 0;
+                document.getElementById('winRate').textContent = `${winRate.toFixed(1)}%`;
+            }
+
+            updatePerformanceChart(performanceData) {
+                const ctx = document.getElementById('performanceChart');
+                const performanceMetrics = document.getElementById('performanceMetrics');
+                
+                if (!performanceData || performanceData.length === 0) {
+                    // Mostrar placeholder si no hay datos
+                    ctx.innerHTML = '<div class="chart-placeholder">No hay datos de performance aún</div>';
+                    performanceMetrics.innerHTML = `
+                        <div class="chart-data">
+                            <span class="data-label">Rendimiento hoy:</span>
+                            <span class="data-value positive">+0.0%</span>
+                        </div>
+                        <div class="chart-data">
+                            <span class="data-label">Rendimiento semanal:</span>
+                            <span class="data-value positive">+0.0%</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Destruir gráfico anterior si existe
+                if (this.performanceChart) {
+                    this.performanceChart.destroy();
+                }
+
+                const labels = performanceData.map(p => {
+                    const date = new Date(p.timestamp);
+                    return date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+                });
+                
+                const data = performanceData.map(p => p.balance);
+
+                // Calcular rendimientos
+                const firstBalance = performanceData[0]?.balance || 0;
+                const lastBalance = performanceData[performanceData.length - 1]?.balance || 0;
+                const todayPerformance = firstBalance > 0 ? ((lastBalance - firstBalance) / firstBalance * 100) : 0;
+
+                this.performanceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Balance (USDT)',
+                            data: data,
+                            borderColor: '#00D4FF',
+                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#00D4FF',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Balance: $${context.parsed.y.toFixed(2)}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Hora'
+                                }
+                            },
+                            y: {
+                                beginAtZero: false,
+                                title: {
+                                    display: true,
+                                    text: 'USDT'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Actualizar métricas de performance
+                document.getElementById('todayPerformance').textContent = 
+                    `${todayPerformance >= 0 ? '+' : ''}${todayPerformance.toFixed(2)}%`;
+            }
+
+            updateTradingMetrics(metrics) {
+                document.getElementById('totalTrades').textContent = metrics.total_trades || 0;
+                document.getElementById('winningTrades').textContent = metrics.winning_trades || 0;
+                document.getElementById('losingTrades').textContent = (metrics.total_trades - metrics.winning_trades) || 0;
+                
+                const winLossRatio = metrics.win_rate ? (metrics.win_rate / (100 - metrics.win_rate)).toFixed(2) : '0.0';
+                document.getElementById('winLossRatio').textContent = winLossRatio;
+                
+                document.getElementById('avgPnl').textContent = `$${metrics.avg_pnl?.toFixed(2) || '0.00'}`;
+                document.getElementById('tradesPerDay').textContent = metrics.trades_per_day || 0;
+                document.getElementById('totalCommissions').textContent = `$${metrics.total_commissions?.toFixed(2) || '0.00'}`;
+            }
+
+            updateLastUpdate() {
+                const now = new Date();
+                document.getElementById('lastUpdate').textContent = 
+                    `Última actualización: ${now.toLocaleTimeString('es-MX')}`;
+            }
+
+            showError(message) {
+                console.error('Dashboard Error:', message);
+                // Puedes agregar notificación visual aquí si quieres
+            }
+        }
+
+        // Inicializar dashboard cuando la página cargue
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Iniciando Nextia Trading Dashboard...');
+            new NextiaTradingDashboard();
+        });
+    </script>
 </body>
 </html>
