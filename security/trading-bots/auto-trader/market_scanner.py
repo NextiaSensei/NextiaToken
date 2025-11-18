@@ -1,21 +1,11 @@
-from flask import Flask, render_template, jsonify, request
-import sqlite3
-import json
-from datetime import datetime, timedelta
-import os
-import threading
-import time
+# market_scanner.py
 import requests
+import pandas as pd
 import numpy as np
+from datetime import datetime, timedelta
+import time
+import json
 
-app = Flask(__name__)
-
-# Configuración
-class DashboardConfig:
-    REFRESH_INTERVAL = 5000  # 5 segundos
-    HISTORY_HOURS = 24
-
-# Clase Market Scanner integrada directamente
 class NextiaMarketScanner:
     def __init__(self):
         self.binance_url = "https://api.binance.com/api/v3"
@@ -64,7 +54,7 @@ class NextiaMarketScanner:
             params = {
                 'symbol': symbol,
                 'interval': '1h',
-                'limit': 48
+                'limit': 48  # 48 horas para mejor análisis
             }
             response = requests.get(url, params=params, timeout=10)
             data = response.json()
@@ -73,6 +63,8 @@ class NextiaMarketScanner:
                 return 0.0
                 
             closes = [float(candle[4]) for candle in data]
+            highs = [float(candle[2]) for candle in data]
+            lows = [float(candle[3]) for candle in data]
             
             # Calcular volatilidad porcentual
             price_changes = []
@@ -81,7 +73,16 @@ class NextiaMarketScanner:
                 price_changes.append(abs(change))
             
             avg_volatility = np.mean(price_changes) if price_changes else 0
-            return round(avg_volatility, 2)
+            
+            # Rango de trading adicional
+            max_high = max(highs)
+            min_low = min(lows)
+            range_volatility = ((max_high - min_low) / min_low) * 100
+            
+            # Combinar ambas medidas
+            total_volatility = (avg_volatility + range_volatility) / 2
+            
+            return round(total_volatility, 2)
         except Exception as e:
             print(f"❌ Error volatilidad {symbol}: {e}")
             return 0.0
@@ -91,6 +92,7 @@ class NextiaMarketScanner:
         btc_vol = self.get_crypto_volatility("BTCUSDT")
         eth_vol = self.get_crypto_volatility("ETHUSDT")
         
+        # Usar la mayor volatilidad entre BTC y ETH
         combined_volatility = max(btc_vol, eth_vol)
         
         return {
@@ -100,8 +102,9 @@ class NextiaMarketScanner:
         }
     
     def get_market_volume(self):
-        """Obtener volumen de mercado"""
+        """Obtener volumen de mercado mejorado"""
         try:
+            # Volumen de BTC y ETH
             btc_volume = self.get_symbol_volume("BTCUSDT")
             eth_volume = self.get_symbol_volume("ETHUSDT")
             
@@ -130,6 +133,7 @@ class NextiaMarketScanner:
     def get_market_trend(self):
         """Determinar tendencia del mercado"""
         try:
+            # Precios de BTC y ETH últimas 24h
             btc_data = self.get_24h_change("BTCUSDT")
             eth_data = self.get_24h_change("ETHUSDT")
             
@@ -164,50 +168,71 @@ class NextiaMarketScanner:
     def calculate_risk_score(self, fear_greed, volatility_data, btc_dominance, eth_dominance, market_trend):
         """Calcular puntuación de riesgo mejorada"""
         risk_score = 0
+        factors = []
         
         # 1. ANÁLISIS FEAR & GREED (25%)
         fg_value = fear_greed['value']
-        if fg_value <= 20:
+        if fg_value <= 20:  # Extreme Fear
             risk_score += 15
-        elif fg_value <= 40:
+            fg_risk = "LOW"
+        elif fg_value <= 40:  # Fear
             risk_score += 30
-        elif fg_value <= 60:
+            fg_risk = "MEDIUM_LOW"
+        elif fg_value <= 60:  # Neutral
             risk_score += 50
-        elif fg_value <= 80:
+            fg_risk = "MEDIUM"
+        elif fg_value <= 80:  # Greed
             risk_score += 70
-        else:
+            fg_risk = "MEDIUM_HIGH"
+        else:  # Extreme Greed
             risk_score += 90
+            fg_risk = "HIGH"
+        factors.append(("Fear & Greed", fg_risk, fg_value))
         
         # 2. ANÁLISIS VOLATILIDAD (30%)
         volatility = volatility_data['combined_volatility']
         if volatility < 2:
             risk_score += 10
+            vol_risk = "LOW"
         elif volatility < 4:
             risk_score += 25
+            vol_risk = "MEDIUM_LOW"
         elif volatility < 7:
             risk_score += 45
+            vol_risk = "MEDIUM"
         elif volatility < 10:
             risk_score += 70
+            vol_risk = "MEDIUM_HIGH"
         else:
             risk_score += 90
+            vol_risk = "HIGH"
+        factors.append(("Volatility", vol_risk, volatility))
         
         # 3. ANÁLISIS DOMINANCIA (20%)
         total_dominance = btc_dominance + eth_dominance
-        if total_dominance > 70:
+        if total_dominance > 70:  # Mercado concentrado = más estable
             risk_score += 20
+            dom_risk = "LOW"
         elif total_dominance > 60:
             risk_score += 40
-        else:
+            dom_risk = "MEDIUM"
+        else:  # Baja dominancia = más riesgo en altcoins
             risk_score += 70
+            dom_risk = "HIGH"
+        factors.append(("BTC+ETH Dominance", dom_risk, total_dominance))
         
         # 4. ANÁLISIS TENDENCIA (25%)
         trend, trend_strength = market_trend
         if trend == "BULLISH" and abs(trend_strength) < 5:
             risk_score += 20
+            trend_risk = "LOW"
         elif trend == "SIDEWAYS":
             risk_score += 40
-        else:
+            trend_risk = "MEDIUM"
+        else:  # Bearish o movimientos muy fuertes
             risk_score += 70
+            trend_risk = "HIGH"
+        factors.append(("Market Trend", trend_risk, trend_strength))
         
         # Calcular riesgo promedio
         avg_risk = risk_score / 4
@@ -230,14 +255,16 @@ class NextiaMarketScanner:
             'risk_score': round(avg_risk, 1),
             'risk_level': risk_level,
             'recommendation': recommendation,
-            'confidence': confidence
+            'confidence': confidence,
+            'factors': factors
         }
 
     def analyze_market_conditions(self):
-        """Analizar todas las condiciones del mercado"""
+        """Analizar todas las condiciones del mercado - VERSIÓN MEJORADA"""
         print("🔍 Analizando condiciones del mercado...")
         
         try:
+            # Obtener todos los datos del mercado
             fear_greed = self.get_fear_greed_index()
             btc_dominance = self.get_btc_dominance()
             eth_dominance = self.get_eth_dominance()
@@ -245,18 +272,15 @@ class NextiaMarketScanner:
             volume_data = self.get_market_volume()
             market_trend = self.get_market_trend()
             
+            # Calcular riesgo mejorado
             risk_analysis = self.calculate_risk_score(
                 fear_greed, volatility_data, btc_dominance, eth_dominance, market_trend
             )
             
             # Determinar mejores pares para trading
-            if risk_analysis['risk_level'] == "LOW":
-                best_pairs = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "ADAUSDT", "DOTUSDT"]
-            elif risk_analysis['risk_level'] == "MEDIUM":
-                best_pairs = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "XRPUSDT"]
-            else:
-                best_pairs = ["BTCUSDT"]
+            best_pairs = self.get_recommended_pairs(risk_analysis['risk_level'])
             
+            # Generar reporte completo
             report = {
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "recommendation": risk_analysis['recommendation'],
@@ -279,6 +303,7 @@ class NextiaMarketScanner:
                         'strength': round(market_trend[1], 2)
                     }
                 },
+                "risk_factors": risk_analysis['factors'],
                 "trading_recommendations": {
                     "best_pairs": best_pairs,
                     "position_size": "60%" if risk_analysis['risk_level'] == "LOW" else "30%" if risk_analysis['risk_level'] == "MEDIUM" else "0%",
@@ -291,6 +316,7 @@ class NextiaMarketScanner:
             
         except Exception as e:
             print(f"❌ Error en análisis de mercado: {e}")
+            # Reporte de error
             return {
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "recommendation": "🔴 ERROR - NO DATA",
@@ -299,191 +325,75 @@ class NextiaMarketScanner:
                 "error": str(e)
             }
 
-# Inicializar scanner global
-scanner = NextiaMarketScanner()
+    def get_recommended_pairs(self, risk_level):
+        """Obtener pares recomendados según el nivel de riesgo"""
+        if risk_level == "LOW":
+            return ["BTCUSDT", "ETHUSDT", "BNBUSDT", "ADAUSDT", "DOTUSDT"]
+        elif risk_level == "MEDIUM":
+            return ["BTCUSDT", "ETHUSDT", "BNBUSDT", "XRPUSDT"]
+        else:
+            return ["BTCUSDT"]  # Solo BTC en alto riesgo
 
-def get_db_connection():
-    """Conexión a la base de datos de trading"""
-    try:
-        db_path = 'trading_data.db'
-        conn = sqlite3.connect(db_path)
-        conn.row_factory = sqlite3.Row
-        return conn
-    except Exception as e:
-        print(f"❌ Error BD: {e}")
-        return None
-
-def get_trading_stats():
-    """Obtener estadísticas completas del trading"""
-    try:
-        conn = get_db_connection()
-        if not conn:
-            return default_stats()
+    def continuous_monitoring(self, interval_minutes=5):
+        """Monitoreo continuo del mercado - VERSIÓN MEJORADA"""
+        print("🚀 INICIANDO NEXTIA MARKET SCANNER - VERSIÓN MEJORADA")
+        print("📊 Incluye análisis BTC + ETH + Volatilidad + Tendencia")
+        print("=" * 60)
+        
+        while True:
+            try:
+                report = self.analyze_market_conditions()
+                
+                # Display mejorado
+                print(f"\n🕐 {report['timestamp']}")
+                print(f"📈 RECOMENDACIÓN: {report['recommendation']}")
+                print(f"⚠️  NIVEL RIESGO: {report['risk_level']} ({report['risk_score']}/100)")
+                print(f"🎯 CONFIANZA: {report['confidence']}")
+                
+                # Análisis detallado
+                print(f"\n📊 ANÁLISIS DETALLADO:")
+                print(f"😨 FEAR/GREED: {report['market_analysis']['fear_greed']['value']} ({report['market_analysis']['fear_greed']['classification']})")
+                print(f"₿ BTC DOMINANCE: {report['market_analysis']['btc_dominance']}%")
+                print(f"🔷 ETH DOMINANCE: {report['market_analysis']['eth_dominance']}%")
+                print(f"📊 VOLATILIDAD BTC: {report['market_analysis']['volatility']['btc']}%")
+                print(f"📊 VOLATILIDAD ETH: {report['market_analysis']['volatility']['eth']}%")
+                print(f"📈 TENDENCIA: {report['market_analysis']['market_trend']['direction']} ({report['market_analysis']['market_trend']['strength']}%)")
+                print(f"💧 VOLUMEN BTC: {report['market_analysis']['volume']['btc_volume']:,.0f}")
+                print(f"💧 VOLUMEN ETH: {report['market_analysis']['volume']['eth_volume']:,.0f}")
+                
+                # Factores de riesgo
+                print(f"\n🔍 FACTORES DE RIESGO:")
+                for factor, risk, value in report['risk_factors']:
+                    print(f"   • {factor}: {risk} ({value})")
+                
+                # Recomendaciones de trading
+                print(f"\n💡 RECOMENDACIONES DE TRADING:")
+                print(f"   • Mejores pares: {', '.join(report['trading_recommendations']['best_pairs'])}")
+                print(f"   • Tamaño posición: {report['trading_recommendations']['position_size']}")
+                print(f"   • Máx trades/día: {report['trading_recommendations']['max_trades']}")
+                print(f"   • Horario óptimo: {report['trading_recommendations']['optimal_hours']}")
+                
+                if report['recommendation'] == "🟢 EXECUTE_BOT":
+                    print(f"\n🎯 ¡CONDICIONES ÓPTIMAS DETECTADAS!")
+                    print("💡 Recomendación: Ejecutar trading bot con configuración normal")
+                elif report['recommendation'] == "🟡 CAUTION - REDUCE POSITION SIZE":
+                    print(f"\n⚠️  CONDICIONES MODERADAS")
+                    print("💡 Recomendación: Reducir tamaño de posición y número de trades")
+                else:
+                    print(f"\n⏳ CONDICIONES DE ALTO RIESGO")
+                    print("💡 Recomendación: Esperar mejor momento del mercado")
+                
+                print("=" * 60)
+                
+            except Exception as e:
+                print(f"❌ Error en monitoreo: {e}")
+                print("🔄 Reintentando en 30 segundos...")
+                time.sleep(30)
+                continue
             
-        cursor = conn.cursor()
-        
-        # Balance actual
-        cursor.execute('SELECT balance FROM performance ORDER BY timestamp DESC LIMIT 1')
-        current = cursor.fetchone()
-        current_balance = current[0] if current else 14.35  # Usar tu balance actual
-        
-        # Métricas básicas
-        cursor.execute('SELECT COUNT(*) as total_trades FROM trades')
-        total_trades = cursor.fetchone()[0]
-        
-        cursor.execute('SELECT COUNT(*) as winning_trades FROM trades WHERE profit_loss > 0')
-        winning_trades = cursor.fetchone()[0]
-        
-        cursor.execute('SELECT COUNT(*) as losing_trades FROM trades WHERE profit_loss < 0')
-        losing_trades = cursor.fetchone()[0]
-        
-        # Calcular métricas
-        win_rate = (winning_trades / total_trades * 100) if total_trades > 0 else 0
-        
-        conn.close()
-        
-        return {
-            'current_balance': current_balance,
-            'active_trades': 0,  # Asumiendo que no hay trades activos
-            'daily_pnl': 0.00,
-            'win_rate': win_rate,
-            'metrics': {
-                'total_trades': total_trades,
-                'winning_trades': winning_trades,
-                'losing_trades': losing_trades,
-                'profit_loss_ratio': round(winning_trades / losing_trades, 1) if losing_trades > 0 else 0,
-                'avg_pnl': 0.00
-            },
-            'performance_metrics': {
-                'today_performance': '+0.5%',
-                'weekly_performance': '+2.3%', 
-                'monthly_performance': '+8.7%',
-                'avg_trade_time': '2.5m',
-                'trades_per_day': total_trades,
-                'commissions_paid': '0.50'
-            },
-            'system_status': {
-                'trading_engine': '✅ Online',
-                'risk_manager': '✅ Online', 
-                'profit_manager': '✅ Online',
-                'session_scheduler': '✅ Online'
-            },
-            'historical_data': {
-                'chart_data': {
-                    'labels': ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'],
-                    'balances': [14.20, 14.25, 14.18, 14.30, 14.35, 14.32, 14.35]
-                }
-            }
-        }
-        
-    except Exception as e:
-        print(f"❌ Error obteniendo stats: {e}")
-        return default_stats()
+            time.sleep(interval_minutes * 60)
 
-def default_stats():
-    """Estadísticas por defecto en caso de error"""
-    return {
-        'current_balance': 14.35,
-        'active_trades': 0,
-        'daily_pnl': 0.00,
-        'win_rate': 0.0,
-        'metrics': {
-            'total_trades': 0,
-            'winning_trades': 0,
-            'losing_trades': 0,
-            'profit_loss_ratio': 0.0,
-            'avg_pnl': 0.00
-        },
-        'performance_metrics': {
-            'today_performance': '+0.0%',
-            'weekly_performance': '+0.0%',
-            'monthly_performance': '+0.0%',
-            'avg_trade_time': '0m',
-            'trades_per_day': 0,
-            'commissions_paid': '0.00'
-        },
-        'system_status': {
-            'trading_engine': '✅ Online',
-            'risk_manager': '✅ Online',
-            'profit_manager': '✅ Online',
-            'session_scheduler': '✅ Online'
-        },
-        'historical_data': {
-            'chart_data': {
-                'labels': [],
-                'balances': []
-            }
-        }
-    }
-
-# Endpoints del Dashboard
-@app.route('/')
-def index():
-    return render_template('dashboard.html')
-
-@app.route('/api/dashboard-data')
-def api_dashboard_data():
-    """Endpoint principal del dashboard"""
-    data = get_trading_stats()
-    return jsonify(data)
-
-@app.route('/api/market-scanner')
-def api_market_scanner():
-    """Endpoint para el Market Scanner"""
-    try:
-        report = scanner.analyze_market_conditions()
-        return jsonify(report)
-    except Exception as e:
-        return jsonify({
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "recommendation": "🔴 ERROR - NO DATA",
-            "risk_level": "UNKNOWN", 
-            "risk_score": 100,
-            "error": str(e)
-        })
-
-@app.route('/api/system-status')
-def api_system_status():
-    """Estado del sistema"""
-    return jsonify({
-        'status': 'operational',
-        'last_update': datetime.now().isoformat()
-    })
-
-@app.route('/api/performance-metrics')
-def api_performance_metrics():
-    """Métricas de performance"""
-    stats = get_trading_stats()
-    return jsonify(stats.get('metrics', {}))
-
-@app.route('/api/debug-trades')
-def debug_trades():
-    """Debug de trades"""
-    try:
-        conn = get_db_connection()
-        trades = conn.execute('SELECT * FROM trades ORDER BY id DESC LIMIT 10').fetchall()
-        conn.close()
-        
-        return jsonify({
-            'total_trades': len(trades), 
-            'trades': [dict(trade) for trade in trades],
-            'status': 'success'
-        })
-    except Exception as e:
-        return jsonify({'error': str(e), 'status': 'error'})
-
-@app.route('/api/current-balance')
-def api_current_balance():
-    """Balance actual"""
-    stats = get_trading_stats()
-    return jsonify({
-        'balance': stats['current_balance'],
-        'timestamp': datetime.now().isoformat()
-    })
-
-if __name__ == '__main__':
-    print("🚀 INICIANDO NEXTIA TRADING DASHBOARD")
-    print("📊 Dashboard: http://localhost:5000")
-    print("🔍 Market Scanner: INTEGRADO")
-    print("🔄 Actualización automática: 5 segundos")
-    app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
+# Función principal
+if __name__ == "__main__":
+    scanner = NextiaMarketScanner()
+    scanner.continuous_monitoring()
