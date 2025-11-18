@@ -4,400 +4,826 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nextia TradingBot Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap');
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        :root {
-            --color-primary: #f10050;
-            --color-secondary: #00D4FF;
-            --color-purple: #5514B4;
-            --color-purple-dark: #3d0e8a;
-            --color-magenta: #e50c56;
-            --bg-dark: #0F0F0F;
-            --bg-darker: #050505;
-            --bg-card: #1a1a1e;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --text-muted: #707070;
-            --border-color: rgba(0, 212, 255, 0.1);
-            --border-color-hover: rgba(0, 212, 255, 0.3);
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            -webkit-font-smoothing: antialiased;
-            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
             min-height: 100vh;
+            padding: 20px;
         }
-
-        h1, h2, h3, h4, h5, h6, .nextia-title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-        }
-
-        .dashboard-container {
-            max-width: 1200px;
+        
+        .container {
+            max-width: 1400px;
             margin: 0 auto;
         }
-
-        .dashboard-header {
+        
+        .header {
+            text-align: center;
             margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .dashboard-title {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+        
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #00ff88, #00ccff);
             -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
         }
-
-        .dashboard-subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
+        
+        .header p {
+            color: #cccccc;
+            font-size: 1.1em;
         }
-
-        .metrics-grid {
+        
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-
-        .metric-card {
-            background-color: var(--bg-card);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        .metric-card:hover {
-            border-color: var(--border-color-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.1);
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
         }
-
-        .metric-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 8px;
+        
+        .stat-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin: 10px 0;
         }
-
-        .metric-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 4px;
+        
+        .balance-value {
+            color: #00ff88;
         }
-
-        .metric-status {
+        
+        .trades-value {
+            color: #00ccff;
+        }
+        
+        .profit-value {
+            color: #00ff88;
+        }
+        
+        .winrate-value {
+            color: #ffcc00;
+        }
+        
+        .stat-label {
+            color: #cccccc;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .stat-trend {
+            font-size: 0.8em;
+            padding: 3px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .trend-positive {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+        
+        .trend-negative {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff4444;
+        }
+        
+        .trend-neutral {
+            background: rgba(255, 255, 255, 0.1);
+            color: #cccccc;
+        }
+        
+        .market-scanner {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .scanner-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            margin-bottom: 20px;
         }
-
-        .metric-status::before {
-            content: "●";
-            margin-right: 6px;
-            color: var(--color-secondary);
+        
+        .scanner-status {
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
         }
-
+        
+        .risk-indicator {
+            margin-bottom: 20px;
+        }
+        
+        .risk-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .risk-bar-fill {
+            height: 100%;
+            background: #00ff88;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .scanner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .scanner-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .scanner-details {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            margin-top: 15px;
+        }
+        
         .content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 30px;
+            margin-bottom: 30px;
         }
-
+        
         @media (max-width: 768px) {
             .content-grid {
                 grid-template-columns: 1fr;
             }
         }
-
-        .content-card {
-            background-color: var(--bg-card);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 400px;
         }
-
-        .content-card:hover {
-            border-color: var(--border-color-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.1);
+        
+        .chart-title {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #00ccff;
         }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .card-icon {
-            margin-right: 10px;
-            font-size: 1.2rem;
-        }
-
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        /* Contenedor con scroll limitado para Performance del Balance */
-        .performance-container {
-            flex: 1;
-            overflow-y: auto;
-            max-height: 400px;
-            padding-right: 10px;
-        }
-
-        /* Personalización de la barra de scroll */
-        .performance-container::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .performance-container::-webkit-scrollbar-track {
-            background: transparent;
-            border-radius: 3px;
-        }
-
-        .performance-container::-webkit-scrollbar-thumb {
-            background: rgba(0, 212, 255, 0.3);
-            border-radius: 3px;
-        }
-
-        .performance-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 212, 255, 0.5);
-        }
-
-        /* Simulación de contenido del gráfico */
-        .chart-placeholder {
-            background: linear-gradient(135deg, var(--bg-darker), var(--bg-card));
-            border-radius: 8px;
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-        }
-
-        .chart-data {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .data-label {
-            color: var(--text-secondary);
-        }
-
-        .data-value {
-            font-weight: 500;
-        }
-
-        .positive {
-            color: var(--color-secondary);
-        }
-
-        .negative {
-            color: var(--color-primary);
-        }
-
+        
         .metrics-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .metric-row {
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .metric-item {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .metric-label {
+            color: #cccccc;
+        }
+        
+        .metric-value {
+            color: #ffffff;
+            font-weight: bold;
+        }
+        
+        .performance-highlights {
+            background: rgba(0, 255, 136, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+        
+        .performance-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .system-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-online {
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+        
+        .status-offline {
+            background: #ff4444;
+            box-shadow: 0 0 10px #ff4444;
+        }
+        
+        .loading {
+            opacity: 0.6;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.6; }
+        }
+        
+        .last-update {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+            font-size: 0.9em;
+        }
+        
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            z-index: 1000;
+        }
+        
+        .connected {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.5);
+        }
+        
+        .disconnected {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff4444;
+            border: 1px solid rgba(255, 0, 0, 0.5);
         }
 
-        .metric-name {
-            color: var(--text-secondary);
+        .risk-low { color: #00ff88; }
+        .risk-medium { color: #ffcc00; }
+        .risk-high { color: #ff4444; }
+
+        .recommendation-good {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
         }
 
-        .metric-number {
-            font-weight: 500;
+        .recommendation-warning {
+            background: rgba(255, 204, 0, 0.2);
+            color: #ffcc00;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
         }
 
-        /* Scrollbar general */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0, 212, 255, 0.3);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 212, 255, 0.5);
-        }
-
-        * {
-            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        button, a {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .recommendation-danger {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <div class="dashboard-header">
-            <h1 class="dashboard-title">Nextia TradingBot Dashboard</h1>
-            <p class="dashboard-subtitle">Monitoreo en tiempo real del bot de trading algorítmico</p>
-        </div>
+    <div class="connection-status connected" id="connection-status">
+        ● Conectado - Datos en tiempo real
+    </div>
 
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-label">BALANCE TOTAL</div>
-                <div class="metric-value">$0.00</div>
-                <div class="metric-status">Cargando...</div>
+    <div class="container">
+        <div class="header">
+            <h1>Nextia TradingBot Dashboard</h1>
+            <p>Monitoreo en tiempo real del bot de trading algorítmico</p>
+        </div>
+        
+        <!-- Market Scanner Section -->
+        <div class="market-scanner">
+            <div class="scanner-header">
+                <div class="chart-title">🔍 Nextia Market Scanner</div>
+                <div class="scanner-status" id="scanner-status">ACTIVE</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">TRADES ACTIVOS</div>
-                <div class="metric-value">0</div>
-                <div class="metric-status">En tiempo real</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">GANANCIA HOY</div>
-                <div class="metric-value">$0.00</div>
-                <div class="metric-status">✔️</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">WIN RATE</div>
-                <div class="metric-value">0.0%</div>
-                <div class="metric-status">24 horas</div>
+            
+            <div class="scanner-content">
+                <div class="risk-indicator">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>Nivel de Riesgo del Mercado:</span>
+                        <span id="risk-level" class="risk-medium">Cargando...</span>
+                    </div>
+                    <div class="risk-bar">
+                        <div id="risk-bar-fill" class="risk-bar-fill"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.8em; color: #cccccc;">
+                        <span>Bajo</span>
+                        <span>Alto</span>
+                    </div>
+                </div>
+                
+                <div class="scanner-grid">
+                    <div class="scanner-item">
+                        <div style="color: #cccccc; font-size: 0.9em;">Recomendación</div>
+                        <div id="trading-recommendation" class="recommendation-warning">Cargando...</div>
+                    </div>
+                    <div class="scanner-item">
+                        <div style="color: #cccccc; font-size: 0.9em;">Confianza</div>
+                        <div id="scanner-confidence">Cargando...</div>
+                    </div>
+                    <div class="scanner-item">
+                        <div style="color: #cccccc; font-size: 0.9em;">Fear & Greed</div>
+                        <div id="fear-greed">Cargando...</div>
+                    </div>
+                    <div class="scanner-item">
+                        <div style="color: #cccccc; font-size: 0.9em;">Tendencia Mercado</div>
+                        <div id="market-trend">Cargando...</div>
+                    </div>
+                </div>
+
+                <div class="scanner-grid">
+                    <div class="scanner-item">
+                        <div style="color: #cccccc; font-size: 0.9em;">Volatilidad BTC</div>
+                        <div id="btc-volatility">Cargando...</div>
+                    </div>
+                    <div class="scanner-item">
+                        <div style="color: #cccccc; font-size: 0.9em;">Volatilidad ETH</div>
+                        <div id="eth-volatility">Cargando...</div>
+                    </div>
+                    <div class="scanner-item">
+                        <div style="color: #cccccc; font-size: 0.9em;">BTC Dominance</div>
+                        <div id="btc-dominance">Cargando...</div>
+                    </div>
+                    <div class="scanner-item">
+                        <div style="color: #cccccc; font-size: 0.9em;">ETH Dominance</div>
+                        <div id="eth-dominance">Cargando...</div>
+                    </div>
+                </div>
+                
+                <div class="scanner-details">
+                    <div style="color: #00ccff; margin-bottom: 10px;">📋 Recomendaciones de Trading:</div>
+                    <div id="trading-pairs">• Pares recomendados: Cargando...</div>
+                    <div id="position-size">• Tamaño posición: Cargando...</div>
+                    <div id="max-trades">• Máx trades/día: Cargando...</div>
+                    <div>• Horario óptimo: 14:00-18:00 UTC</div>
+                </div>
             </div>
         </div>
-
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">BALANCE TOTAL</div>
+                <div class="stat-value balance-value" id="total-balance">$0.00</div>
+                <div class="stat-trend trend-neutral" id="balance-trend">● Cargando...</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">TRADES ACTIVOS</div>
+                <div class="stat-value trades-value" id="active-trades">0</div>
+                <div class="stat-trend trend-neutral">● En tiempo real</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">GANANCIA HOY</div>
+                <div class="stat-value profit-value" id="daily-pnl">$0.00</div>
+                <div class="stat-trend trend-positive">✔</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">WIN RATE</div>
+                <div class="stat-value winrate-value" id="win-rate">0.0%</div>
+                <div class="stat-trend trend-neutral">● 24 horas</div>
+            </div>
+        </div>
+        
         <div class="content-grid">
-            <div class="content-card">
-                <div class="card-header">
-                    <span class="card-icon">✔</span>
-                    <h2 class="card-title">Performance del Balance</h2>
+            <div class="chart-container">
+                <div class="chart-title">📈 Performance del Balance</div>
+                <canvas id="balanceChart"></canvas>
+            </div>
+            
+            <div class="metrics-container">
+                <div class="chart-title">📊 Métricas de Trading</div>
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <span class="metric-label">Total de trades:</span>
+                        <span class="metric-value" id="total-trades">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Trades ganadores:</span>
+                        <span class="metric-value" id="winning-trades">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Trades perdedores:</span>
+                        <span class="metric-value" id="losing-trades">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Ratio ganancia/pérdida:</span>
+                        <span class="metric-value" id="profit-loss-ratio">0.0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Expectativa matemática:</span>
+                        <span class="metric-value" id="mathematical-expectation">$0.00</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Tiempo promedio en trade:</span>
+                        <span class="metric-value" id="avg-trade-time">0m</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Trades por día:</span>
+                        <span class="metric-value" id="trades-per-day">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Comisiones pagadas:</span>
+                        <span class="metric-value" id="commissions-paid">$0.00</span>
+                    </div>
                 </div>
-                <div class="performance-container">
-                    <div class="chart-placeholder">
-                        Gráfico de rendimiento del balance
+                
+                <div class="performance-highlights">
+                    <div class="performance-item">
+                        <span>Rendimiento hoy:</span>
+                        <span class="metric-value" id="today-performance">+0.5%</span>
                     </div>
-                    <div class="chart-data">
-                        <span class="data-label">Rendimiento hoy:</span>
-                        <span class="data-value positive">+0.5%</span>
+                    <div class="performance-item">
+                        <span>Rendimiento semanal:</span>
+                        <span class="metric-value" id="weekly-performance">+2.3%</span>
                     </div>
-                    <div class="chart-data">
-                        <span class="data-label">Rendimiento semanal:</span>
-                        <span class="data-value positive">+2.3%</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Rendimiento mensual:</span>
-                        <span class="data-value positive">+8.7%</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Máximo histórico:</span>
-                        <span class="data-value">$12,450</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Mínimo histórico:</span>
-                        <span class="data-value">$8,230</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Volatilidad:</span>
-                        <span class="data-value">2.4%</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Sharpe Ratio:</span>
-                        <span class="data-value positive">1.8</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Drawdown máximo:</span>
-                        <span class="data-value negative">-12.3%</span>
-                    </div>
-                    <div class="chart-data">
-                        <span class="data-label">Recuperación:</span>
-                        <span class="data-value positive">+15.7%</span>
+                    <div class="performance-item">
+                        <span>Rendimiento mensual:</span>
+                        <span class="metric-value" id="monthly-performance">+8.7%</span>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="content-card">
-                <div class="card-header">
-                    <span class="card-icon">☺</span>
-                    <h2 class="card-title">Métricas de Trading</h2>
-                </div>
-                <div class="metrics-container">
-                    <div class="metric-row">
-                        <span class="metric-name">Total de trades:</span>
-                        <span class="metric-number">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-name">Trades ganadores:</span>
-                        <span class="metric-number">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-name">Trades perdedores:</span>
-                        <span class="metric-number">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-name">Ratio ganancia/pérdida:</span>
-                        <span class="metric-number">0.0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-name">Expectativa matemática:</span>
-                        <span class="metric-number">$0.00</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-name">Tiempo promedio en trade:</span>
-                        <span class="metric-number">0m</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-name">Trades por día:</span>
-                        <span class="metric-number">0</span>
-                    </div>
-                    <div class="metric-row">
-                        <span class="metric-name">Comisiones pagadas:</span>
-                        <span class="metric-number">$0.00</span>
-                    </div>
+        <div class="system-status">
+            <div class="status-item">
+                <span>Trading Engine</span>
+                <div>
+                    <span class="status-indicator status-online"></span>
+                    <span id="trading-engine-status">✅ Online</span>
                 </div>
             </div>
+            <div class="status-item">
+                <span>Risk Manager</span>
+                <div>
+                    <span class="status-indicator status-online"></span>
+                    <span id="risk-manager-status">✅ Online</span>
+                </div>
+            </div>
+            <div class="status-item">
+                <span>Profit Manager</span>
+                <div>
+                    <span class="status-indicator status-online"></span>
+                    <span id="profit-manager-status">✅ Online</span>
+                </div>
+            </div>
+            <div class="status-item">
+                <span>Session Scheduler</span>
+                <div>
+                    <span class="status-indicator status-online"></span>
+                    <span id="session-scheduler-status">✅ Online</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="last-update" id="last-update">
+            Última actualización: Cargando...
         </div>
     </div>
+
+    <script>
+        // Configuración global
+        const API_BASE_URL = window.location.origin; // Usar la misma URL del servidor
+        let balanceChart = null;
+        let updateInterval;
+        
+        // Función para formatear números
+        function formatCurrency(value) {
+            return '$' + parseFloat(value).toFixed(2);
+        }
+        
+        function formatPercent(value) {
+            if (value === 0) return '0.0%';
+            const sign = value > 0 ? '+' : '';
+            return sign + parseFloat(value).toFixed(1) + '%';
+        }
+        
+        // Función para actualizar todo el dashboard
+        async function updateDashboard() {
+            try {
+                console.log('🔄 Actualizando dashboard...');
+                
+                // Obtener todos los datos del endpoint principal
+                const response = await fetch(`${API_BASE_URL}/api/dashboard-data`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('📊 Datos recibidos:', data);
+                
+                // Actualizar estadísticas principales
+                document.getElementById('total-balance').textContent = formatCurrency(data.current_balance);
+                document.getElementById('active-trades').textContent = data.active_trades;
+                document.getElementById('daily-pnl').textContent = formatCurrency(data.daily_pnl);
+                document.getElementById('win-rate').textContent = formatPercent(data.win_rate);
+                
+                // Actualizar métricas de trading
+                document.getElementById('total-trades').textContent = data.metrics.total_trades || 0;
+                document.getElementById('winning-trades').textContent = data.metrics.winning_trades || 0;
+                document.getElementById('losing-trades').textContent = data.metrics.losing_trades || 0;
+                document.getElementById('profit-loss-ratio').textContent = (data.metrics.profit_loss_ratio || 0).toFixed(1);
+                document.getElementById('mathematical-expectation').textContent = formatCurrency(data.metrics.avg_pnl || 0);
+                document.getElementById('avg-trade-time').textContent = data.performance_metrics?.avg_trade_time || '0m';
+                document.getElementById('trades-per-day').textContent = data.performance_metrics?.trades_per_day || 0;
+                document.getElementById('commissions-paid').textContent = formatCurrency(data.performance_metrics?.commissions_paid || 0);
+                
+                // Actualizar performance
+                document.getElementById('today-performance').textContent = data.performance_metrics?.today_performance || '+0.0%';
+                document.getElementById('weekly-performance').textContent = data.performance_metrics?.weekly_performance || '+0.0%';
+                
+                // Actualizar estado del sistema
+                if (data.system_status) {
+                    document.getElementById('trading-engine-status').textContent = data.system_status.trading_engine;
+                    document.getElementById('risk-manager-status').textContent = data.system_status.risk_manager;
+                    document.getElementById('profit-manager-status').textContent = data.system_status.profit_manager;
+                    document.getElementById('session-scheduler-status').textContent = data.system_status.session_scheduler;
+                }
+                
+                // Actualizar gráfico
+                updateChart(data.historical_data);
+                
+                // Actualizar Market Scanner
+                await updateMarketScanner();
+                
+                // Actualizar timestamp y estado de conexión
+                document.getElementById('last-update').textContent = 
+                    `Última actualización: ${new Date().toLocaleTimeString()}`;
+                document.getElementById('connection-status').className = 'connection-status connected';
+                document.getElementById('connection-status').textContent = '● Conectado - Datos en tiempo real';
+                document.getElementById('balance-trend').textContent = '● Actualizado';
+                document.getElementById('balance-trend').className = 'stat-trend trend-positive';
+                    
+            } catch (error) {
+                console.error('❌ Error actualizando dashboard:', error);
+                document.getElementById('connection-status').className = 'connection-status disconnected';
+                document.getElementById('connection-status').textContent = '● Error de conexión';
+                document.getElementById('balance-trend').textContent = '● Error de conexión';
+                document.getElementById('balance-trend').className = 'stat-trend trend-negative';
+                
+                // Mostrar datos de ejemplo en caso de error
+                showSampleData();
+            }
+        }
+        
+        // Función para actualizar el Market Scanner
+        async function updateMarketScanner() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/market-scanner`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('🔍 Datos Market Scanner:', data);
+                
+                // Actualizar indicadores principales
+                document.getElementById('risk-level').textContent = data.risk_level;
+                document.getElementById('risk-level').className = `risk-${data.risk_level.toLowerCase()}`;
+                document.getElementById('trading-recommendation').textContent = data.recommendation;
+                document.getElementById('scanner-confidence').textContent = data.confidence || 'MEDIUM';
+                
+                // Aplicar estilos según la recomendación
+                const recommendationElement = document.getElementById('trading-recommendation');
+                if (data.recommendation.includes('🟢')) {
+                    recommendationElement.className = 'recommendation-good';
+                } else if (data.recommendation.includes('🟡')) {
+                    recommendationElement.className = 'recommendation-warning';
+                } else {
+                    recommendationElement.className = 'recommendation-danger';
+                }
+                
+                // Actualizar barra de riesgo
+                const riskBar = document.getElementById('risk-bar-fill');
+                riskBar.style.width = `${data.risk_score}%`;
+                
+                // Cambiar color según riesgo
+                if (data.risk_score <= 30) {
+                    riskBar.style.background = '#00ff88';
+                } else if (data.risk_score <= 60) {
+                    riskBar.style.background = '#ffcc00';
+                } else {
+                    riskBar.style.background = '#ff4444';
+                }
+                
+                // Actualizar métricas del mercado
+                document.getElementById('fear-greed').textContent = 
+                    `${data.market_analysis.fear_greed.value} (${data.market_analysis.fear_greed.classification})`;
+                document.getElementById('market-trend').textContent = 
+                    `${data.market_analysis.market_trend.direction} (${data.market_analysis.market_trend.strength}%)`;
+                document.getElementById('btc-volatility').textContent = 
+                    `${data.market_analysis.volatility.btc}%`;
+                document.getElementById('eth-volatility').textContent = 
+                    `${data.market_analysis.volatility.eth}%`;
+                document.getElementById('btc-dominance').textContent = 
+                    `${data.market_analysis.btc_dominance}%`;
+                document.getElementById('eth-dominance').textContent = 
+                    `${data.market_analysis.eth_dominance}%`;
+                
+                // Actualizar recomendaciones de trading
+                document.getElementById('trading-pairs').textContent = 
+                    `• Pares recomendados: ${data.trading_recommendations.best_pairs.join(', ')}`;
+                document.getElementById('position-size').textContent = 
+                    `• Tamaño posición: ${data.trading_recommendations.position_size}`;
+                document.getElementById('max-trades').textContent = 
+                    `• Máx trades/día: ${data.trading_recommendations.max_trades}`;
+                
+            } catch (error) {
+                console.error('❌ Error actualizando Market Scanner:', error);
+                document.getElementById('trading-recommendation').textContent = 'Error de conexión';
+                document.getElementById('trading-recommendation').className = 'recommendation-danger';
+            }
+        }
+        
+        function showSampleData() {
+            // Datos de ejemplo cuando hay error de conexión
+            document.getElementById('total-balance').textContent = '$14.35';
+            document.getElementById('active-trades').textContent = '0';
+            document.getElementById('daily-pnl').textContent = '$0.00';
+            document.getElementById('win-rate').textContent = '0.0%';
+        }
+        
+        // Inicializar y actualizar gráfico
+        function initChart() {
+            const ctx = document.getElementById('balanceChart').getContext('2d');
+            balanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Balance (USDT)',
+                        data: [],
+                        borderColor: '#00ff88',
+                        backgroundColor: 'rgba(0, 255, 136, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#00ff88',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#00ff88',
+                            bodyColor: '#ffffff'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#cccccc',
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#cccccc'
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+        }
+        
+        function updateChart(historicalData) {
+            if (!balanceChart || !historicalData) return;
+            
+            const chartData = historicalData.chart_data;
+            if (chartData && chartData.labels && chartData.balances) {
+                balanceChart.data.labels = chartData.labels;
+                balanceChart.data.datasets[0].data = chartData.balances;
+                balanceChart.update('none');
+            }
+        }
+        
+        // Inicializar dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializando Nextia TradingBot Dashboard...');
+            initChart();
+            updateDashboard();
+            
+            // Actualizar cada 5 segundos
+            updateInterval = setInterval(updateDashboard, 5000);
+            
+            // También actualizar cuando la ventana gana foco
+            window.addEventListener('focus', function() {
+                updateDashboard();
+            });
+        });
+        
+        // Limpiar intervalo cuando la página se cierra
+        window.addEventListener('beforeunload', function() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        });
+    </script>
 </body>
 </html>
