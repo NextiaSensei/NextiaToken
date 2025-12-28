@@ -1,32 +1,51 @@
+# =========================
+# Environment
+# =========================
 .env
+.env.*
 .env.local
-.secret
-*.key
+
+# =========================
+# Node / Hardhat
+# =========================
 node_modules/
-artifacts/
+package-lock.json
 cache/
+artifacts/
+deployments/
 coverage/
+typechain/
+
+# =========================
+# Logs & reports
+# =========================
 *.log
-.DS_Store
-.vscode/
-node_modules/
-venv/
-.flat/
+gas-report.html
 results/
-.env
-flat/
 
+# =========================
+# IDE / OS
+# =========================
+.idea/
+.vscode/
+.DS_Store
 
-# Backups y privados
-*.docx
-*.xlsx
-*.bak
-*.zip
-*.rar
-*.tar
-*.gz
-*.word
-*.pdf
-*.env
+# =========================
+# Python / misc (legacy)
+# =========================
+venv/
+env/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite
+*.db
+
+# =========================
+# Backups & local scripts
+# =========================
 backups/
-flat
+scripts/backup_deployments.sh
+scripts/copy_to_usb.sh
