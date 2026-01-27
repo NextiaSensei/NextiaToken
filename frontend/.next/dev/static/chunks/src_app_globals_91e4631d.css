@@ -1,0 +1,76 @@
+@import "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap";
+/* [project]/src/app/globals.css [app-client] (css) */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-primary: #f10050;
+  --color-secondary: #00d4ff;
+  --color-purple: #5514b4;
+  --color-purple-dark: #3d0e8a;
+  --color-magenta: #e50c56;
+  --bg-dark: #0f0f0f;
+  --bg-darker: #050505;
+  --bg-card: #1a1a1e;
+  --text-primary: #fff;
+  --text-secondary: #b0b0b0;
+  --text-muted: #707070;
+  --border-color: #00d4ff1a;
+  --border-color-hover: #00d4ff4d;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  font-family: Inter, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, .nextia-title {
+  font-family: Montserrat, sans-serif;
+  font-weight: 700;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00d4ff4d;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00d4ff80;
+}
+
+* {
+  transition: background-color .3s, border-color .3s, box-shadow .3s;
+}
+
+button, a {
+  transition: all .3s cubic-bezier(.4, 0, .2, 1);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*# sourceMappingURL=src_app_globals_91e4631d.css.map*/

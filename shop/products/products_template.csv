@@ -1,2 +1,0 @@
-product_id,sku,name,category,price,currency,stock,description,image_path
-1,NXT-001,Nombre Producto,Categoria Ej,19.99,MXN,10,"Descripción corta","media/images/prod1.png"
