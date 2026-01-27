@@ -1,163 +1,105 @@
 # 🪙 Nextia Token (NXT)
 
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![Coverage](https://img.shields.io/badge/tests-28%2F28-blue)
-![Gas Efficiency](https://img.shields.io/badge/gas-optimized-40%25-lightgrey)
-# 🧪 Nextia Token (NXT)
+![Status](https://img.shields.io/badge/status-R%26D-blue)
+![Contracts](https://img.shields.io/badge/contracts-tested-brightgreen)
+![Network](https://img.shields.io/badge/network-testnet-lightgrey)
+![Governance](https://img.shields.io/badge/governance-centralized-orange)
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/NextiaSensei/NextiaToken/ci.yml?branch=main)
-![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
-![Gas Efficiency](https://img.shields.io/badge/gas%20usage-optimized-blue)
-![License](https://img.shields.io/badge/license-MIT-yellow)
+# Nextia Ecosystem
 
+Nextia Ecosystem is an experimental Web3 project focused on building real, modular infrastructure before public adoption.
 
----
+The ecosystem combines on-chain components, off-chain services, and research-driven development practices to explore sustainable utility-driven token models.
 
-## 🚀 Introducción
-
-**Nextia Token (NXT)** es un token **ERC-20 optimizado y auditado** que impulsa el ecosistema **Nextia**, integrando servicios de marketing digital, inteligencia artificial, trading y comercio electrónico en un solo universo descentralizado.
-
-> “Donde la innovación real se encuentra con la transparencia blockchain.” — *Nextia Dev Team*
+This repository represents the current Research & Development (R&D) phase.
 
 ---
 
-## 🎯 Visión
+## Project Status
 
-Construir un puente entre los servicios del mundo real y el poder de la blockchain — donde cada cliente, empresa e inversionista participa en un mismo ecosistema de valor, transparencia y comunidad.
+**Phase:** Research & Development  
+**Token:** Nextia Token (NXT) — ERC-20  
+**Public Sale:** None  
+**Open Community:** Not yet  
+**Mainnet Deployment:** Pending final review
 
----
-
-## 🧠 Características Clave
-
-| Categoría | Descripción |
-|------------|-------------|
-| ⚙️ **Tecnología** | Contrato ERC-20 basado en OpenZeppelin |
-| ⛽ **Optimización** | Consumo de gas 40% menor al estándar |
-| 🧪 **Tests** | 28/28 tests pasando ✅ (100% cobertura) |
-| 🛡 **Seguridad** | Patrón *Pausable*, control por roles y validaciones anti-reentrancy |
-| 🔍 **Verificación** | Contrato verificado en Etherscan (Sepolia) |
-| 🌐 **Multi-Chain Ready** | Compatible con Sepolia, Holesky y Polygon |
+There is no active token sale, presale, or public distribution.
 
 ---
 
-## 📊 Datos del Contrato
+## Core Components
 
-| Dato | Valor |
-|------|--------|
-| 📍 **Red** | Ethereum Sepolia Testnet |
-| 💎 **Token** | NXT |
-| 🧮 **Decimales** | 18 |
-| 🪙 **Suministro** | 1,000,000 NXT |
-| 📜 **Contrato** | `0x9B37Da3cfF70C2f1BF7A811D0BFcd317a004dcfE` |
+- **Nextia Token (NXT):** Utility-focused ERC-20 token under active optimization.
+- **Nextia Marketing:** A real-world oriented platform for digital marketing tools and automation.
+- **Experimental Infrastructure:** Smart contracts, staking prototypes, internal dashboards, and bots used for testing and validation.
+
+All components are developed incrementally and may evolve independently.
 
 ---
 
-## 💧 Estrategia de Lanzamiento Beta (Liquidez Inicial)
+## Design Philosophy
 
-### 🔹 Fase Beta (Liquidez $100–150 USD)
-Esta fase busca demostrar **actividad real** y **precio vivo** del token en el mercado.
+The project prioritizes:
 
-- Liquidez inicial: **$100 USD (~0.033 ETH)**  
-- Tokens aportados: **33,000 NXT**  
-- Precio inicial estimado: **$0.003 / NXT**
-- Par creado: **NXT / ETH** (en Uniswap)
+- Technical correctness over speed
+- Documentation over hype
+- Security over exposure
+- Long-term alignment over short-term incentives
 
-**Procedimiento:**
-1. Entra a [https://app.uniswap.org](https://app.uniswap.org)  
-2. Conecta tu wallet (Sepolia o Mainnet).  
-3. Agrega el token usando su dirección de contrato.  
-4. Crea la pool **NXT/ETH**  
-5. Aporta: `0.033 ETH` + `33,000 NXT`
-6. Firma la transacción y espera confirmación.
-
-🧩 **Resultado:**  
-Tu token ya tiene **precio público**, volumen, y un mercado inicial donde cualquiera puede comprar o vender.  
-Esto demuestra tracción real ante futuros inversionistas.
+Speculative dynamics are not considered a design requirement.
 
 ---
 
-## 🧠 Cómo funciona el precio (ejemplo simple)
+## Tokenomics & Governance
 
-| Elemento | Cantidad | Valor |
-|-----------|-----------|--------|
-| Liquidez ETH | 0.033 ETH | ≈ $100 |
-| Tokens NXT | 33,000 NXT | — |
-| **Precio inicial** | 1 NXT = 0.000001 ETH | ≈ $0.003 |
+Tokenomics are defined as a framework, not a finalized economic promise.
 
-> Si más gente compra NXT → el precio sube.  
-> Si venden → baja.  
-> Así funciona el mercado automático (AMM) de Uniswap.
+- No fixed APR
+- No guaranteed returns
+- No premature liquidity events
+
+Governance is currently centralized for safety and coordination, with a planned transition toward multisignature and proposal-based systems.
+
+Refer to the whitepaper for details.
 
 ---
 
-## 🔧 Instalación y Uso
+## Documentation
 
-```bash
-# 1️⃣ Clona el repositorio
-git clone https://github.com/NextiaSensei/NextiaToken.git
-cd NextiaToken
+- 📘 Whitepaper: `docs/whitepaper/whitepaper_v0.6.md`
+- 🧠 Tokenomics Framework: Included in the whitepaper
+- 🛠 Developer Documentation: `README.dev.md` (work in progress)
+- 📊 Investor Overview: `README.investors.md` (work in progress)
 
-# 2️⃣ Instala dependencias
-npm install
+---
 
-# 3️⃣ Crea el archivo .env
-cp .env.example .env
+## Collaboration
 
-Ejemplo .env:
-PRIVATE_KEY=0x...
-ALCHEMY_API_KEY=...
-ETHERSCAN_API_KEY=...
-COINMARKETCAP_API_KEY=...
-REPORT_GAS=true
+Nextia Ecosystem is selectively open to collaboration with:
 
-🧰 Comandos Esenciales
-Acción	Comando
-Compilar contrato	npx hardhat compile
-Correr tests	npx hardhat test
-Deploy local	npx hardhat run scripts/deploy.js --network localhost
-Deploy Sepolia	npx hardhat run scripts/deploy.js --network sepolia
-Verificar contrato	npx hardhat verify --network sepolia <ADDRESS>
+- Blockchain engineers
+- Smart contract auditors
+- Backend / automation developers
+- Web3 marketers with real execution experience
+- Advisors with technical or regulatory background
 
-📂 Estructura del Proyecto
+There is no open application process at this stage.
 
-NextiaToken/
-├── contracts/         # Contratos inteligentes (NextiaToken.sol)
-├── scripts/           # Scripts de deploy y gas report
-├── test/              # Tests de unidad y seguridad
-├── deployments/       # Direcciones y ABI tras cada deploy
-├── README_developer.md
-├── README_INVESTORS.md
-└── README.md
+---
 
-🔐 Seguridad
+## Disclaimer
 
-Patrón Ownable + Pausable implementado.
+This project is experimental.
 
-Validación de inputs y control de reentrancy.
+Nothing in this repository constitutes financial advice, an investment offer, or a solicitation.
 
-Tests completos de eventos y permisos.
+Participation implies technical and financial risk.
 
-Auditoría externa programada (fase mainnet).
+---
 
-📈 Roadmap
-Fase	Estado	Descripción
-1️⃣ Fundamentos	✅	Contrato ERC20 y tests unitarios
-2️⃣ Ecosistema	🟡	Tokenomics, docs y comunidad
-3️⃣ Mainnet	🔜	Deploy y auditoría externa
-4️⃣ Expansión	🔜	Integración con AI, Shop y Staking
-🤝 Contribución
+## Contact
 
-Pull requests y forks son bienvenidos.
-Para mejoras mayores, abre un issue en GitHub y discutamos.
+For professional inquiries, collaboration, or technical discussion:
 
-📬 Contacto
-
-📧 nextiacorp33@gmail.com
-
-💬 @JorgeSensei (Telegram)
-🌐 https://nextiamarketing.com
-
-🪙 Licencia
-
-MIT © Nextia 2025
-Desarrollado con ❤️ por Nextia Dev Team
+- Website: https://tokenlab.nextiamarketing.com
+- GitHub: https://github.com/NextiaSensei
