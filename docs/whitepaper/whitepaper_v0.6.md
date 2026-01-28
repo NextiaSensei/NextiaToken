@@ -444,3 +444,124 @@ Future changes will be:
 
 This document represents the state of the project at the time of writing and does not imply finality.
 
+
+# 📘 NextiaToken Whitepaper v0.6
+_Pre-Mainnet — January 2026_
+
+---
+
+## 1. Introduction
+
+NextiaToken (NXT) is an ERC-20 utility token created to power the **Nextia ecosystem**:
+a growing network of digital services focused on **marketing, Web3 tools, AI and trading infrastructure**.
+
+This document reflects the **current operational state** of the project and outlines
+a **governance-driven future**.
+
+---
+
+## 2. Problem Statement
+
+Most tokens are launched without:
+- Real products
+- Transparent code
+- Long-term incentives
+
+Nextia approaches tokenization **after** building infrastructure,
+not before.
+
+---
+
+## 3. Solution Overview
+
+NXT functions as:
+- Internal payment unit
+- Access key to premium services
+- Staking & incentive mechanism
+- Governance instrument (future)
+
+---
+
+## 4. Technical Architecture
+
+- ERC-20 standard
+- Solidity ^0.8.x
+- Hardhat framework
+- No upgradeable proxies
+- Explicit ownership controls
+
+Current deployment:
+- Sepolia testnet
+- Verified and public
+
+---
+
+## 5. Tokenomics (v0.6)
+
+### Initial Parameters
+- Initial Supply: **1,000,000 NXT**
+- Decimals: 18
+- Mint: Controlled (owner / future multisig)
+- Burn: Enabled
+
+### Distribution (Indicative)
+- Liquidity & Market Making
+- Development & Core Team (vesting planned)
+- Ecosystem & Community Rewards
+- Treasury (timelocked)
+- Partnerships & Marketing
+
+> Exact allocations are maintained in `tokenomics.md`  
+> and subject to governance updates.
+
+---
+
+## 6. Governance Roadmap
+
+Phase-based governance:
+1. Owner-controlled (current)
+2. Multisig (Gnosis Safe)
+3. DAO-lite voting
+4. Full community governance
+
+---
+
+## 7. Security Model
+
+- Full test coverage
+- Gas benchmarking
+- Public repository
+- External audit planned
+
+---
+
+## 8. Risks & Mitigation
+
+| Risk | Mitigation |
+|----|-----------|
+| Centralized control | Multisig + DAO |
+| Market volatility | Vesting & long-term incentives |
+| Technical risk | Audits & testing |
+
+---
+
+## 9. Legal Disclaimer
+
+NXT is a **utility token**.
+This document is informational and does not constitute investment advice.
+
+---
+
+## 10. Conclusion
+
+NextiaToken is built with:
+- Patience
+- Transparency
+- Technical rigor
+
+The protocol evolves with its community.
+
+---
+
+**Nextia Labs — 2026**
+

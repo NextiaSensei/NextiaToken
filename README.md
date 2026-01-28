@@ -101,5 +101,11 @@ Participation implies technical and financial risk.
 
 For professional inquiries, collaboration, or technical discussion:
 
-- Website: https://tokenlab.nextiamarketing.com
-- GitHub: https://github.com/NextiaSensei
+
+## 📞 Contact
+
+**Nextia Labs**  
+🌐 https://nextiamarketing.com y https://tokenlab.nextiamarketing.com
+📧 jsensei@tokenlab.nextiamarketing.com 
+💬 Telegram: @nextiatoken_presale_bot
+GitHub: https://github.com/NextiaSensei

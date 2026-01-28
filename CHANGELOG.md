@@ -1,68 +1,42 @@
-# 📜 Changelog - Nextia Token (NXT)
+# 📜 CHANGELOG — Nextia Token (NXT)
 
-Este archivo documenta los hitos alcanzados en el desarrollo de **Nextia Token (NXT)**.
-
----
-
-## 🚀 Día 1 - Setup inicial
-- Instalación de Hardhat y dependencias.
-- Creación del contrato base `NextiaToken.sol` (ERC20 con mint, burn, pause).
-- Configuración de `.env` con claves privadas y API keys.
-- Configuración inicial de `hardhat.config.js`.
+Registro oficial de cambios del proyecto.
 
 ---
 
-## 🚀 Día 2 - Deploy en testnet
-- Deploy exitoso en **Sepolia**.
-- Generación automática de `deployments/NextiaToken.json` (ABI + address).
-- Verificación del contrato en Etherscan ✅.
-- Confirmación del supply inicial (1,000,000 NXT).
+## [v0.6.0] — Documentación & Arquitectura (2026-01-28)
+### Added
+- Whitepaper v0.6 (estructura profesional)
+- Tokenomics técnico separado (`tokenomics.md`)
+- README optimizado para repositorio público
+
+### Changed
+- Alineación entre tokenomics, whitepaper y roadmap
+- Clarificación del modelo de gobernanza progresiva
 
 ---
 
-## 🚀 Día 3 - Interacción y pruebas básicas
-- Scripts `interact.js` implementados para:
-  - `balanceOf` (consulta de balances).
-  - `transfer`, `mint`, `burn`.
-  - `pause` / `unpause`.
-- Validación en **Etherscan**:
-  - Token desplegado, símbolo **NXT**, 18 decimales.
-  - Total supply: 1,000,000 NXT.
-  - Transferencias: registradas y verificadas.
-- Backup encriptado generado y copiado a USB con verificación de integridad.
+## [v0.3.0] — Gas & Security Phase (2025-09)
+### Added
+- Test suite completa (unit + integration)
+- Análisis de seguridad (Slither)
+- Deploy exitoso en Sepolia
+
+### Improved
+- Optimización de gas (~40%)
+- Implementación completa de `pausable`
 
 ---
 
-## ✅ Próximos pasos (Día 4+)
-- Subida del repo pulido a GitHub.
-- Pruebas con múltiples usuarios (`approve`, `transferFrom`, `allowance`).
-- Auditoría interna de seguridad (tests edge cases).
-- Planificación de comunidad y documentación extendida.
+## [v0.2.0] — Core Development (2025-08)
+- Contrato ERC-20 base
+- Funciones mint / burn
+- Hardhat configurado
 
+---
 
-### **2. 📜 CHANGELOG.md (ACTUALIZADO)**
+## [v0.1.0] — Project Bootstrap (2025-07)
+- Estructura inicial del proyecto
+- Configuración base
+- Primeros tests
 
-```markdown
-# 📜 Changelog - Nextia Token
-
-## [v0.3.0] - Fase Gas & Security - Sep 2025
-### 🚀 Nuevas Características
-- ✅ 28 tests completos (100% coverage)
-- ✅ Análisis Slither de seguridad
-- ✅ Optimización avanzada de gas
-- ✅ Deploy en Sepolia exitoso
-
-### 🔧 Mejoras Técnicas
-- Gas reducido en 40% vs versión inicial
-- Implementación completa de pausable
-- Tests de seguridad exhaustivos
-
-## [v0.2.0] - Fase Desarrollo - Ago 2025
-- ✅ Contrato base ERC20 con mint/burn
-- ✅ Funciones pausable
-- ✅ Configuración Hardhat completa
-
-## [v0.1.0] - Setup Inicial - Jul 2025
-- ✅ Estructura de proyecto
-- ✅ Configuración básica
-- ✅ Primeras pruebas
