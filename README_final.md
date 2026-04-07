@@ -1,6 +1,6 @@
-# 💎 NextiaToken — v0.5 Pre-Mainnet
+# 💎 NextiaToken — v0.6 Pre-Mainnet
 
-**NextiaToken ($NXTA)** es el activo digital central del ecosistema **Nextia**, un proyecto que fusiona tecnología, creatividad y valor real para construir una economía web3 autónoma.
+**NextiaToken ($NXT)** es el activo digital central del ecosistema **Nextia**, un proyecto que fusiona tecnología, creatividad y valor real para construir una economía web3 autónoma.
 
 > “No solo un token. Una llave para acceder al futuro.”  
 > — *Nextia Labs, 2025*
@@ -18,10 +18,11 @@ Su propósito: **potenciar proyectos de marketing, desarrollo y comunidad descen
 
 | Fase | Objetivo | Estado |
 |------|-----------|--------|
-| **v0.1 - v0.4** | Contrato base, auditorías y pruebas internas | ✅ Completado |
-| **v0.5 (actual)** | Pre-Mainnet + documentación técnica + dashboard dev | 🚀 Activa |
-| **v0.6** | CI/CD + despliegue en Ethereum Mainnet | 🕓 En curso |
-| **v0.7+** | Integración con dApps Nextia y staking | 🔮 Planeado |
+| **v0.1 – v0.4** | Contrato base, auditorías y pruebas internas | ✅ Completado |
+| **v0.5** | Pre-Mainnet + documentación técnica + dashboard dev | ✅ Completado |
+| **v0.6 (actual)** | 33/33 tests • Reporte de auditoría público • Presale activa | 🚀 Activa |
+| **v0.7** | Staking & ecosistema integration | 🔮 Planeado |
+| **v1.0** | Mainnet + DAO-lite | 🔮 Planeado |
 
 ---
 
@@ -29,9 +30,9 @@ Su propósito: **potenciar proyectos de marketing, desarrollo y comunidad descen
 
 | Parámetro | Valor |
 |------------|--------|
-| **Símbolo** | NXTA |
+| **Símbolo** | NXT |
 | **Red actual** | Ethereum (Sepolia Testnet) |
-| **Suministro total** | 1,000,000 NXTA |
+| **Suministro total** | 1,000,000 NXT |
 | **Propiedad inicial** | Nextia Labs |
 | **Política de emisión** | Controlado por `onlyOwner` |
 | **Funciones clave** | Mint / Burn / Pause / Unpause |
@@ -40,14 +41,22 @@ Su propósito: **potenciar proyectos de marketing, desarrollo y comunidad descen
 
 ## 🔐 4. Seguridad y transparencia
 
-- Auditoría interna completa  
-- 100% cobertura de pruebas automatizadas  
-- Contrato verificado públicamente  
-- Protección ante reentrancy  
-- Control de roles y pausas  
-- Eventos ERC-20 (`Transfer`, `Approval`, `Mint`, `Burn`)  
+- **33/33 tests automatizados pasados** — 4 suites (Advanced, Gas, Security, Core)
+- 100% cobertura de pruebas
+- Contrato verificado públicamente en Sepolia
+- Protección ante reentrancy
+- Control de roles y pausas
+- Eventos ERC-20 (`Transfer`, `Approval`, `Mint`, `Burn`)
 
-> Seguridad, eficiencia y claridad son los pilares de NextiaToken.
+> 🔒 **Reporte completo de auditoría → [nextia-marketing.vercel.app/#audit](https://nextia-marketing.vercel.app/#audit)**
+
+| Suite | Tests | Resultado |
+|-------|-------|-----------|
+| Advanced & Edge Cases | 9/9 | ✅ |
+| Gas Tests ⛽ | 6/6 | ✅ |
+| Security Tests 🔒 | 13/13 | ✅ |
+| Core Tests | 5/5 | ✅ |
+| **Total** | **33/33** | **✅ Sin fallos** |
 
 ---
 
@@ -71,13 +80,17 @@ npx hardhat run scripts/deploy.js --network sepolia
 
 # Verificar en Etherscan
 npx hardhat verify --network sepolia <address>
+```
 
-💡 Framework principal: Hardhat
-🧩 Compilador: Solidity 0.8.20
+💡 Framework principal: Hardhat  
+🧩 Compilador: Solidity 0.8.20  
 ⚙️ Testnet activa: Sepolia
 
-🧪 6. Arquitectura técnica
+---
 
+## 🧪 6. Arquitectura técnica
+
+```
 NextiaToken/
 │
 ├── contracts/
@@ -86,7 +99,8 @@ NextiaToken/
 ├── test/
 │   ├── NextiaToken.extra.test.js
 │   ├── NextiaToken.security.test.js
-│   └── NextiaToken.gas.test.js
+│   ├── NextiaToken.gas.test.js
+│   └── NextiaToken.test.js
 │
 ├── scripts/
 │   ├── deploy.js
@@ -96,78 +110,59 @@ NextiaToken/
 ├── .env
 ├── hardhat.config.js
 └── README_final.md
+```
 
-🌐 7. Ecosistema Nextia
+---
+
+## 🌐 7. Ecosistema Nextia
 
 NextiaToken es parte del ecosistema Nextia, compuesto por:
 
-Nextia Marketing: servicios web3 y economía digital
+- **Nextia Marketing:** servicios web3 y economía digital
+- **TokenLab:** incubadora de proyectos blockchain
+- **NextiaVerse:** comunidad global, NFT y metaverso
 
-TokenLab: incubadora de proyectos blockchain
+Cada módulo impulsa el valor de NXT dentro del ecosistema.
 
-NextiaVerse: comunidad global, NFT y metaverso
+---
 
-Cada módulo impulsa el valor de NXTA dentro del ecosistema.
+## 📊 8. Datos técnicos
 
-📊 8. Datos técnicos
-Dato	Valor
-Contrato (Sepolia)	0x61d0969006E0Fd98De6b378Fcd42C449397Fc044
-Framework	Hardhat
-Lenguaje	Solidity 0.8.20
-Gas promedio deploy	815,697 gas
-Cobertura de tests	100% líneas / funciones / branches
-🤝 9. Contribución
+| Dato | Valor |
+|------|-------|
+| Contrato (Sepolia) | `0x61d0969006E0Fd98De6b378Fcd42C449397Fc044` |
+| Framework | Hardhat |
+| Lenguaje | Solidity 0.8.20 |
+| Gas promedio deploy | 815,697 gas |
+| Cobertura de tests | 100% líneas / funciones / branches |
+| Tests totales | **33/33** (4 suites) |
 
-Haz fork del repo
+---
 
-Crea una rama (feature/nueva-funcionalidad)
+## 🤝 9. Contribución
 
-Envía tu PR con descripción técnica
+1. Haz fork del repo
+2. Crea una rama (`feature/nueva-funcionalidad`)
+3. Envía tu PR con descripción técnica
+4. Antes de subir: ejecuta `npx hardhat test` y asegúrate que todo pase ✅
 
-Antes de subir: ejecuta npx hardhat test y asegúrate de que todo pase ✅
+---
 
-💰 10. Contacto e inversión
+## 💰 10. Contacto e inversión
 
-🌐 Web: https://nextiamarketing.com
+🌐 Web: https://nextiamarketing.com  
+📧 Email: jsensei@tokenlab.nextiamarketing.com  
+💬 Telegram: @nextiatoken_presale_bot  
+GitHub: https://github.com/NextiaSensei  
 
-🐦 X/Twitter: @NextiaLabs
+> 🔒 Reporte de auditoría: [nextia-marketing.vercel.app/#audit](https://nextia-marketing.vercel.app/#audit)
 
-📧 Email: contact@nextiamarketing.com
+---
 
-💬 Telegram: @NextiaCommunity
+## 🪙 11. Licencia
 
-🪙 11. Licencia
-
-Este proyecto se distribuye bajo la licencia MIT.
+Este proyecto se distribuye bajo la licencia MIT.  
 Libre uso y modificación con atribución.
 
-“Invertir en NextiaToken es apostar por la unión entre código, arte y comunidad.”
-— Nextia Labs, 2025
-
-
----
-
-## ✅ **2️⃣ Checklist antes del commit final**
-
-| Elemento | Estado |
-|-----------|--------|
-| `README.md` actualizado | ✅ |
-| `README_developer.md` creado | ✅ |
-| `README_investors.md` creado | ✅ |
-| `README_final.md` creado | ✅ |
-| `.env` validado con claves correctas | ✅ |
-| `hardhat.config.js` funcional y actualizado | ✅ |
-| Tests (`npx hardhat test`) 100% pasados | ✅ |
-| Último commit documentado como versión v0.5 Pre-Mainnet | 🕓 Pendiente |
-| Push al repo remoto | 🕓 Pendiente |
-
----
-
-## 🧾 **3️⃣ Commit y push**
-
-Ejecuta esto:
-
-```bash
-git add .
-git commit -m "📘 v0.5 Pre-Mainnet — Documentación final y preparación para dashboard dev (fase 5.3)"
-git push origin main
+> “Invertir en NextiaToken es apostar por la unión entre código, arte y comunidad.”  
+> — Nextia Labs, 2026
