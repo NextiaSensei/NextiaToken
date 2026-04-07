@@ -2,6 +2,7 @@
 
 ![Status](https://img.shields.io/badge/status-R%26D-blue)
 ![Contracts](https://img.shields.io/badge/contracts-tested-brightgreen)
+![Tests](https://img.shields.io/badge/tests-33%2F33-brightgreen)
 ![Network](https://img.shields.io/badge/network-testnet-lightgrey)
 ![Governance](https://img.shields.io/badge/governance-centralized-orange)
 
@@ -37,6 +38,21 @@ All components are developed incrementally and may evolve independently.
 
 ---
 
+## 🔒 Audit Report — 33/33 Tests Passing
+
+The full test suite report (Mochawesome v6.3.0, 4 suites, ~278ms) is publicly available on the presale landing:
+
+> 🌐 **[Ver Reporte Completo → nextia-marketing.vercel.app/#audit](https://nextia-marketing.vercel.app/#audit)**
+
+| Suite | Tests | Status |
+|-------|-------|--------|
+| NextiaToken — Advanced & Edge Cases | 9/9 | ✅ |
+| NextiaToken — Gas Tests ⛽ | 6/6 | ✅ |
+| NextiaToken — Security Tests 🔒 | 13/13 | ✅ |
+| NextiaToken — Core Tests | 5/5 | ✅ |
+
+---
+
 ## Design Philosophy
 
 The project prioritizes:
@@ -68,8 +84,9 @@ Refer to the whitepaper for details.
 
 - 📘 Whitepaper: `docs/whitepaper/whitepaper_v0.6.md`
 - 🧠 Tokenomics Framework: Included in the whitepaper
-- 🛠 Developer Documentation: `README.dev.md` (work in progress)
-- 📊 Investor Overview: `README.investors.md` (work in progress)
+- 🛠 Developer Documentation: `README_developer.md`
+- 📊 Investor Overview: `README_INVESTORS.md`
+- 💎 Full Summary: `README_final.md`
 
 ---
 
@@ -97,15 +114,10 @@ Participation implies technical and financial risk.
 
 ---
 
-## Contact
-
-For professional inquiries, collaboration, or technical discussion:
-
-
 ## 📞 Contact
 
 **Nextia Labs**  
-🌐 https://nextiamarketing.com y https://tokenlab.nextiamarketing.com
-📧 jsensei@tokenlab.nextiamarketing.com 
-💬 Telegram: @nextiatoken_presale_bot
+🌐 https://nextiamarketing.com y https://tokenlab.nextiamarketing.com  
+📧 jsensei@tokenlab.nextiamarketing.com  
+💬 Telegram: @nextiatoken_presale_bot  
 GitHub: https://github.com/NextiaSensei
