@@ -2,13 +2,11 @@
 
 ---
 
-# ✅ 2️⃣ README_investors.md — FINAL (v0.6)
-
-```md
 # 💰 NextiaToken (NXT) — Investor Overview (v0.6 Pre-Mainnet)
 
 ![Blockchain](https://img.shields.io/badge/blockchain-Ethereum-purple)
 ![Status](https://img.shields.io/badge/status-pre--mainnet-yellow)
+![Tests](https://img.shields.io/badge/tests-33%2F33-brightgreen)
 ![Transparency](https://img.shields.io/badge/code-public-green)
 
 ---
@@ -20,7 +18,7 @@ real digital services including **marketing infrastructure, trading tools and AI
 
 The project is currently in **Pre-Mainnet (v0.6)** with:
 - Public smart contracts
-- Full test coverage
+- Full test coverage (33/33 tests — 4 suites)
 - Active testnet deployment
 - Clear roadmap toward decentralization
 
@@ -45,7 +43,7 @@ NXT exists to power services, align contributors and enable governance over time
 | Standard | ERC-20 |
 | Network | Ethereum |
 | Status | Testnet (Sepolia) |
-| Supply | Defined in tokenomics |
+| Supply | 1,000,000 NXT |
 | Governance | Planned (DAO-lite) |
 
 ---
@@ -53,12 +51,22 @@ NXT exists to power services, align contributors and enable governance over time
 ## 🔐 Security & Transparency
 
 - Public repository
-- 100% local test coverage
+- **33/33 tests passing** across 4 suites (Advanced, Gas, Security, Core)
 - Verified testnet contract
 - No hidden mint
 - No proxy upgrades
 
-> External audit is planned prior to any mainnet launch.
+> 🔒 Full audit report publicly available at the presale landing:  
+> **[nextia-marketing.vercel.app/#audit](https://nextia-marketing.vercel.app/#audit)**
+
+| Suite | Tests | Result |
+|-------|-------|--------|
+| Advanced & Edge Cases | 9/9 | ✅ Pass |
+| Gas Tests ⛽ | 6/6 | ✅ Pass |
+| Security Tests 🔒 | 13/13 | ✅ Pass |
+| Core Tests | 5/5 | ✅ Pass |
+
+> External audit by a third party is planned prior to any mainnet launch.
 
 ---
 
@@ -102,8 +110,6 @@ This is a **long-term infrastructure project**, not a short-term speculative ass
 ## 📞 Contact
 
 **Nextia Labs**  
-🌐 https://nextiamarketing.com y https://tokenlab.nextiamarketing.com
-📧 jsensei@tokenlab.nextiamarketing.com 
+🌐 https://nextiamarketing.com y https://tokenlab.nextiamarketing.com  
+📧 jsensei@tokenlab.nextiamarketing.com  
 💬 Telegram: @nextiatoken_presale_bot
-
-
