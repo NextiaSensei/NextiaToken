@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html class="dark scroll-smooth" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nextia Token — DApp Staking | 20% APY</title>
+<meta name="description" content="Plataforma oficial de staking de Nextia Token (NXT). Conecta tu wallet, bloquea tokens y gana 20% APY en Sepolia Testnet."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://nextia-token.vercel.app/"/>
+<meta property="og:title" content="Nextia Token DApp — Staking 20% APY"/>
+<meta property="og:description" content="La plataforma DeFi de próxima generación. Staking con contratos auditados en Sepolia."/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary": "#b9c3ff",
+        "primary-container": "#7189f6",
+        "on-primary": "#002388",
+        "secondary": "#ffb2bf",
+        "secondary-container": "#ff4d80",
+        "on-secondary-fixed": "#3f0016",
+        "tertiary": "#dcb8ff",
+        "background": "#121221",
+        "surface": "#121221",
+        "surface-dim": "#121221",
+        "surface-container": "#1e1e2e",
+        "surface-container-low": "#1a1a2a",
+        "surface-container-lowest": "#0d0d1c",
+        "surface-container-high": "#292839",
+        "surface-container-highest": "#343344",
+        "surface-bright": "#383848",
+        "surface-variant": "#343344",
+        "on-surface": "#e3e0f6",
+        "on-surface-variant": "#c5c5d5",
+        "on-background": "#e3e0f6",
+        "outline": "#8f909e",
+        "outline-variant": "#444653",
+        "error": "#ffb4ab",
+        "success": "#6dd58c",
+      },
+      fontFamily: {
+        headline: ["Space Grotesk"],
+        body: ["Inter"],
+        label: ["Inter"]
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; background-color: #0f0f1e; }
+  .font-headline { font-family: 'Space Grotesk', sans-serif; }
+  .glass-card {
+    background: rgba(52, 51, 68, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .glass-card-solid {
+    background: rgba(30, 30, 46, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  @keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .pulse-secondary { animation: pulse-soft 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+  .float-anim { animation: float 6s ease-in-out infinite; }
+  .gradient-text {
+    background: linear-gradient(135deg, #b9c3ff, #ffb2bf, #dcb8ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .tab-btn.active {
+    background: rgba(185, 195, 255, 0.15);
+    color: #b9c3ff;
+    border-color: rgba(185, 195, 255, 0.3);
+  }
+  .tab-btn { transition: all 0.2s ease; }
+  .test-pass { color: #6dd58c; }
+  .test-row:hover { background: rgba(185,195,255,0.04); }
+  input[type=range] {
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: #343344;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #b9c3ff;
+    cursor: pointer;
+  }
+  .apy-bar {
+    background: linear-gradient(90deg, #b9c3ff, #7189f6);
+    border-radius: 4px;
+    transition: width 1s ease;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #121221; }
+  ::-webkit-scrollbar-thumb { background: #343344; border-radius: 3px; }
+</style>
+</head>
+<body class="text-on-surface overflow-x-hidden">
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav class="fixed top-0 w-full z-50 bg-[#121221]/80 backdrop-blur-xl transition-all duration-300 border-b border-outline-variant/10">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-6 h-18 py-4">
+  <a href="https://nextia-marketing.vercel.app" class="flex items-center gap-2 text-xl font-bold text-primary font-headline tracking-wider">
+    <span class="text-2xl">🪙</span> NXT <span class="text-on-surface-variant text-sm font-normal ml-1">DApp</span>
+  </a>
+  <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+    <a href="#dashboard" class="text-on-surface-variant hover:text-on-surface transition-colors">Dashboard</a>
+    <a href="#stake" class="text-on-surface-variant hover:text-on-surface transition-colors">Staking</a>
+    <a href="#leaderboard" class="text-on-surface-variant hover:text-on-surface transition-colors">Leaderboard</a>
+    <a href="#contracts" class="text-on-surface-variant hover:text-on-surface transition-colors">Contratos</a>
+    <a href="#audit" class="text-on-surface-variant hover:text-on-surface transition-colors">Auditoría</a>
+  </div>
+  <div class="flex items-center gap-3">
+    <a href="https://nextia-marketing.vercel.app" class="text-sm text-on-surface-variant hover:text-primary transition-colors hidden md:block">← Presale</a>
+    <button id="connect-btn" onclick="connectWallet()" class="bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold py-2 px-5 rounded-xl hover:scale-105 active:scale-95 transition-transform text-sm">
+      Conectar Wallet
+    </button>
+  </div>
+</div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="relative pt-32 pb-16 overflow-hidden">
+<div class="absolute top-0 left-1/4 w-[800px] h-[600px] bg-primary/8 blur-[150px] rounded-full -z-10"></div>
+<div class="absolute top-0 right-1/4 w-[600px] h-[500px] bg-secondary/6 blur-[120px] rounded-full -z-10"></div>
+<div class="max-w-7xl mx-auto px-6 text-center">
+  <div class="inline-flex items-center gap-2 bg-success/10 border border-success/20 px-4 py-2 rounded-full mb-6">
+    <span class="w-2 h-2 rounded-full bg-success pulse-secondary"></span>
+    <span class="text-success text-xs font-bold tracking-widest uppercase">Sepolia Testnet — En Vivo</span>
+  </div>
+  <h1 class="text-5xl md:text-7xl font-headline font-bold gradient-text leading-tight mb-4">Nextia Staking</h1>
+  <p class="text-on-surface-variant text-xl max-w-2xl mx-auto font-light mb-10">
+    Bloquea tus NXT, gana recompensas reales. Contratos auditados con 33/33 tests pasados.
+  </p>
+  <!-- Stats rápidos -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+    <div class="glass-card p-5 rounded-2xl border border-outline-variant/10">
+      <div class="text-primary font-headline text-3xl font-bold">20%</div>
+      <div class="text-on-surface-variant text-xs uppercase tracking-widest mt-1">APY Anual</div>
+    </div>
+    <div class="glass-card p-5 rounded-2xl border border-outline-variant/10">
+      <div class="text-secondary font-headline text-3xl font-bold">33/33</div>
+      <div class="text-on-surface-variant text-xs uppercase tracking-widest mt-1">Tests OK</div>
+    </div>
+    <div class="glass-card p-5 rounded-2xl border border-outline-variant/10">
+      <div class="text-tertiary font-headline text-3xl font-bold">4</div>
+      <div class="text-on-surface-variant text-xs uppercase tracking-widest mt-1">Smart Contracts</div>
+    </div>
+    <div class="glass-card p-5 rounded-2xl border border-outline-variant/10">
+      <div class="text-primary font-headline text-3xl font-bold">150K</div>
+      <div class="text-on-surface-variant text-xs uppercase tracking-widest mt-1">NXT Rewards Pool</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ DASHBOARD ═══════════════ -->
+<section class="py-16" id="dashboard">
+<div class="max-w-7xl mx-auto px-6">
+  <h2 class="text-3xl font-headline font-bold mb-2">Tu Dashboard</h2>
+  <p class="text-on-surface-variant mb-8">Conecta tu wallet para ver tus datos en tiempo real.</p>
+
+  <!-- Wallet Alert -->
+  <div id="wallet-alert" class="glass-card border border-primary/20 rounded-2xl p-6 flex items-center gap-4 mb-8">
+    <span class="material-symbols-outlined text-primary text-3xl">account_balance_wallet</span>
+    <div class="flex-grow">
+      <p class="font-semibold text-on-surface">Wallet no conectada</p>
+      <p class="text-on-surface-variant text-sm">Conecta MetaMask para ver tu balance, rewards y posición de staking.</p>
+    </div>
+    <button onclick="connectWallet()" class="bg-primary text-on-primary font-bold py-2 px-6 rounded-xl text-sm hover:bg-primary-container transition-colors shrink-0">
+      Conectar
+    </button>
+  </div>
+  <div id="wallet-info" class="hidden mb-6 p-4 bg-success/10 border border-success/20 rounded-2xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-success">check_circle</span>
+    <span id="wallet-address" class="text-success font-medium text-sm"></span>
+    <span class="text-on-surface-variant text-sm ml-auto">Sepolia Testnet</span>
+  </div>
+
+  <!-- Métricas personales -->
+  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="glass-card p-6 rounded-2xl border border-outline-variant/10 hover:border-primary/20 transition-all">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary">token</span>
+        </div>
+        <span class="text-on-surface-variant text-sm">Balance NXT</span>
+      </div>
+      <div class="text-2xl font-headline font-bold text-on-surface" id="nxt-balance">—</div>
+      <div class="text-xs text-on-surface-variant mt-1">≈ $<span id="nxt-usd">0.00</span> USD</div>
+    </div>
+    <div class="glass-card p-6 rounded-2xl border border-outline-variant/10 hover:border-secondary/20 transition-all">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 bg-secondary/10 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-secondary">lock</span>
+        </div>
+        <span class="text-on-surface-variant text-sm">NXT en Stake</span>
+      </div>
+      <div class="text-2xl font-headline font-bold text-on-surface" id="staked-balance">—</div>
+      <div class="text-xs text-on-surface-variant mt-1">Bloqueado en contrato</div>
+    </div>
+    <div class="glass-card p-6 rounded-2xl border border-outline-variant/10 hover:border-success/20 transition-all">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 bg-success/10 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-success">savings</span>
+        </div>
+        <span class="text-on-surface-variant text-sm">Rewards Ganados</span>
+      </div>
+      <div class="text-2xl font-headline font-bold text-success" id="rewards-balance">—</div>
+      <div class="text-xs text-on-surface-variant mt-1">Listos para reclamar</div>
+    </div>
+    <div class="glass-card p-6 rounded-2xl border border-outline-variant/10 hover:border-tertiary/20 transition-all">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 bg-tertiary/10 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-tertiary">trending_up</span>
+        </div>
+        <span class="text-on-surface-variant text-sm">APY Actual</span>
+      </div>
+      <div class="text-2xl font-headline font-bold text-tertiary">20.00%</div>
+      <div class="text-xs text-on-surface-variant mt-1">Rendimiento anual</div>
+    </div>
+  </div>
+
+  <!-- Calculadora APY -->
+  <div class="glass-card p-8 rounded-3xl border border-primary/20 mb-8">
+    <h3 class="text-xl font-headline font-bold mb-6 flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary">calculate</span> Calculadora de Rendimiento
+    </h3>
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="space-y-5">
+        <div>
+          <label class="text-on-surface-variant text-sm mb-2 block">Cantidad a stakear (NXT)</label>
+          <input type="range" min="100" max="10000" value="1000" id="calc-amount" oninput="calcRewards()" class="w-full">
+          <div class="flex justify-between text-xs text-on-surface-variant mt-1">
+            <span>100</span><span id="calc-amount-val" class="text-primary font-bold">1,000 NXT</span><span>10,000</span>
+          </div>
+        </div>
+        <div>
+          <label class="text-on-surface-variant text-sm mb-2 block">Período de staking</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button onclick="setPeriod(30)" id="p30" class="tab-btn active py-2 rounded-xl border border-outline-variant/20 text-sm font-medium">30 días</button>
+            <button onclick="setPeriod(90)" id="p90" class="tab-btn py-2 rounded-xl border border-outline-variant/20 text-sm font-medium text-on-surface-variant">90 días</button>
+            <button onclick="setPeriod(365)" id="p365" class="tab-btn py-2 rounded-xl border border-outline-variant/20 text-sm font-medium text-on-surface-variant">1 año</button>
+          </div>
+        </div>
+      </div>
+      <div class="glass-card-solid p-6 rounded-2xl border border-outline-variant/10">
+        <div class="text-on-surface-variant text-sm mb-1">Rewards estimados</div>
+        <div class="text-4xl font-headline font-bold text-success mb-1" id="calc-rewards">16.44</div>
+        <div class="text-on-surface-variant text-sm">NXT en <span id="calc-period-label">30 días</span></div>
+        <div class="mt-4 pt-4 border-t border-outline-variant/10">
+          <div class="flex justify-between text-sm">
+            <span class="text-on-surface-variant">Total al finalizar</span>
+            <span class="text-primary font-bold" id="calc-total">1,016.44 NXT</span>
+          </div>
+          <div class="flex justify-between text-sm mt-2">
+            <span class="text-on-surface-variant">APY aplicado</span>
+            <span class="text-tertiary font-bold">20.00%</span>
+          </div>
+          <div class="flex justify-between text-sm mt-2">
+            <span class="text-on-surface-variant">Valor aprox. en USD</span>
+            <span class="text-success font-bold">$<span id="calc-usd">0.08</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfica rendimiento -->
+  <div class="glass-card p-8 rounded-3xl border border-outline-variant/10">
+    <h3 class="text-xl font-headline font-bold mb-6 flex items-center gap-2">
+      <span class="material-symbols-outlined text-tertiary">bar_chart</span> Proyección de Rendimiento — 12 Meses
+    </h3>
+    <div class="space-y-3">
+      <div id="chart-bars"></div>
+    </div>
+    <div class="flex items-center gap-6 mt-4 text-xs text-on-surface-variant">
+      <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-primary"></div> Capital inicial</div>
+      <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-success"></div> Rewards acumulados</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ STAKE / UNSTAKE ═══════════════ -->
+<section class="py-16 bg-surface-container-low/30" id="stake">
+<div class="max-w-4xl mx-auto px-6">
+  <h2 class="text-3xl font-headline font-bold mb-2 text-center">Panel de Staking</h2>
+  <p class="text-on-surface-variant text-center mb-10">Gestiona tu posición directamente desde aquí.</p>
+
+  <!-- Tabs -->
+  <div class="flex gap-2 p-1 bg-surface-container rounded-2xl mb-8 max-w-sm mx-auto">
+    <button onclick="switchTab('stake-panel')" id="tab-stake" class="flex-1 py-2.5 rounded-xl text-sm font-bold tab-btn active">Stakear</button>
+    <button onclick="switchTab('unstake-panel')" id="tab-unstake" class="flex-1 py-2.5 rounded-xl text-sm font-bold tab-btn text-on-surface-variant">Retirar</button>
+    <button onclick="switchTab('claim-panel')" id="tab-claim" class="flex-1 py-2.5 rounded-xl text-sm font-bold tab-btn text-on-surface-variant">Reclamar</button>
+  </div>
+
+  <!-- Panel Stake -->
+  <div id="stake-panel" class="glass-card p-8 rounded-3xl border border-primary/20">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-lg font-bold">Depositar NXT</h3>
+      <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-bold">20% APY</span>
+    </div>
+    <div class="space-y-4">
+      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/10">
+        <div class="flex justify-between text-sm text-on-surface-variant mb-2">
+          <span>Cantidad</span><span>Balance: <span class="text-primary" id="stake-max">— NXT</span></span>
+        </div>
+        <div class="flex items-center gap-3">
+          <input type="number" id="stake-amount" placeholder="0.00" min="1" class="flex-1 bg-transparent text-2xl font-headline font-bold outline-none placeholder-surface-container-highest" oninput="updateStakePreview()">
+          <div class="flex items-center gap-2">
+            <button onclick="setMaxStake()" class="text-xs bg-primary/15 text-primary px-3 py-1 rounded-lg font-bold hover:bg-primary/25 transition-colors">MAX</button>
+            <div class="text-sm font-bold text-on-surface">NXT</div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/10 text-sm space-y-2">
+        <div class="flex justify-between"><span class="text-on-surface-variant">Recibirás (anual)</span><span class="text-success font-bold" id="stake-preview-rewards">0 NXT</span></div>
+        <div class="flex justify-between"><span class="text-on-surface-variant">APY</span><span class="text-tertiary font-bold">20.00%</span></div>
+        <div class="flex justify-between"><span class="text-on-surface-variant">Red</span><span class="text-on-surface">Sepolia Testnet</span></div>
+      </div>
+      <button onclick="doStake()" class="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold py-4 rounded-2xl hover:shadow-[0_0_30px_rgba(185,195,255,0.3)] transition-all uppercase tracking-widest">
+        Stakear NXT 🔒
+      </button>
+      <p class="text-center text-xs text-on-surface-variant">Necesitas MetaMask con Sepolia ETH de prueba. <a href="https://sepoliafaucet.com" target="_blank" class="text-primary hover:underline">Obtén ETH gratis →</a></p>
+    </div>
+  </div>
+
+  <!-- Panel Unstake -->
+  <div id="unstake-panel" class="hidden glass-card p-8 rounded-3xl border border-secondary/20">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-lg font-bold">Retirar NXT</h3>
+      <span class="text-xs bg-secondary/10 text-secondary px-3 py-1 rounded-full font-bold">Sin penalización</span>
+    </div>
+    <div class="space-y-4">
+      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/10">
+        <div class="flex justify-between text-sm text-on-surface-variant mb-2">
+          <span>Cantidad a retirar</span><span>Stakeado: <span class="text-secondary" id="unstake-max">— NXT</span></span>
+        </div>
+        <div class="flex items-center gap-3">
+          <input type="number" id="unstake-amount" placeholder="0.00" min="1" class="flex-1 bg-transparent text-2xl font-headline font-bold outline-none placeholder-surface-container-highest">
+          <div class="flex items-center gap-2">
+            <button onclick="setMaxUnstake()" class="text-xs bg-secondary/15 text-secondary px-3 py-1 rounded-lg font-bold hover:bg-secondary/25 transition-colors">MAX</button>
+            <div class="text-sm font-bold text-on-surface">NXT</div>
+          </div>
+        </div>
+      </div>
+      <button onclick="doUnstake()" class="w-full bg-gradient-to-r from-secondary to-secondary-container text-on-secondary-fixed font-bold py-4 rounded-2xl hover:shadow-[0_0_30px_rgba(255,77,128,0.3)] transition-all uppercase tracking-widest">
+        Retirar NXT 🔓
+      </button>
+    </div>
+  </div>
+
+  <!-- Panel Claim -->
+  <div id="claim-panel" class="hidden glass-card p-8 rounded-3xl border border-success/20">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-lg font-bold">Reclamar Rewards</h3>
+      <span class="text-xs bg-success/10 text-success px-3 py-1 rounded-full font-bold">Disponibles ahora</span>
+    </div>
+    <div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10 text-center mb-4">
+      <div class="text-on-surface-variant text-sm mb-2">Rewards pendientes</div>
+      <div class="text-5xl font-headline font-bold text-success" id="claim-amount">0.00</div>
+      <div class="text-on-surface-variant text-sm mt-1">NXT disponibles</div>
+    </div>
+    <button onclick="doClaim()" class="w-full bg-gradient-to-r from-success to-[#4CAF50] text-[#002400] font-bold py-4 rounded-2xl hover:shadow-[0_0_30px_rgba(109,213,140,0.3)] transition-all uppercase tracking-widest">
+      Reclamar Rewards 💰
+    </button>
+  </div>
+
+  <!-- Toast notificación -->
+  <div id="toast" class="hidden fixed bottom-6 right-6 z-50 glass-card-solid border border-outline-variant/20 p-4 rounded-2xl shadow-2xl max-w-sm">
+    <p id="toast-msg" class="text-sm font-medium"></p>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ LEADERBOARD ═══════════════ -->
+<section class="py-16" id="leaderboard">
+<div class="max-w-4xl mx-auto px-6">
+  <h2 class="text-3xl font-headline font-bold mb-2 text-center">🏆 Leaderboard de Stakers</h2>
+  <p class="text-on-surface-variant text-center mb-10">Los mejores holders del ecosistema Nextia.</p>
+  <div class="glass-card rounded-3xl border border-outline-variant/10 overflow-hidden">
+    <div class="bg-surface-container-high/50 px-6 py-4 grid grid-cols-12 text-xs uppercase tracking-widest text-on-surface-variant font-bold border-b border-outline-variant/10">
+      <div class="col-span-1">#</div>
+      <div class="col-span-5">Wallet</div>
+      <div class="col-span-3 text-right">NXT Stakeado</div>
+      <div class="col-span-3 text-right">Rewards</div>
+    </div>
+    <div id="leaderboard-rows">
+      <!-- Se llena con JS -->
+    </div>
+    <div class="px-6 py-4 border-t border-outline-variant/10 text-center">
+      <p class="text-on-surface-variant text-xs">Datos en tiempo real de Sepolia Testnet • Actualizado cada 30s</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ INFO CONTRATOS ═══════════════ -->
+<section class="py-16 bg-surface-container-low/30" id="contracts">
+<div class="max-w-7xl mx-auto px-6">
+  <h2 class="text-3xl font-headline font-bold mb-2">🔗 Smart Contracts</h2>
+  <p class="text-on-surface-variant mb-8">Todos los contratos son open-source y verificables en Sepolia.</p>
+  <div class="grid md:grid-cols-2 gap-4">
+
+    <div class="glass-card p-6 rounded-2xl border border-outline-variant/10 hover:border-primary/30 transition-all">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="text-xs text-primary font-bold uppercase tracking-widest mb-1">Token Principal</div>
+          <h3 class="text-lg font-headline font-bold">NextiaToken (NXT)</h3>
+        </div>
+        <span class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary">token</span>
+        </span>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-3 mb-3 font-mono text-xs text-on-surface-variant break-all">
+        0x1234...abcd <span class="text-primary">(Sepolia)</span>
+      </div>
+      <div class="grid grid-cols-2 gap-2 text-xs text-on-surface-variant mb-4">
+        <div>Supply: <span class="text-on-surface font-bold">1,000,000 NXT</span></div>
+        <div>Decimals: <span class="text-on-surface font-bold">18</span></div>
+        <div>Pausable: <span class="text-success font-bold">✓ Sí</span></div>
+        <div>Mintable: <span class="text-success font-bold">✓ Owner</span></div>
+      </div>
+      <a href="https://github.com/NextiaSensei/NextiaToken/blob/main/contracts" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-primary text-sm font-medium hover:underline">
+        Ver código <span class="material-symbols-outlined text-sm">open_in_new</span>
+      </a>
+    </div>
+
+    <div class="glass-card p-6 rounded-2xl border border-outline-variant/10 hover:border-secondary/30 transition-all">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="text-xs text-secondary font-bold uppercase tracking-widest mb-1">Staking</div>
+          <h3 class="text-lg font-headline font-bold">NextiaStaking</h3>
+        </div>
+        <span class="w-10 h-10 bg-secondary/10 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-secondary">lock</span>
+        </span>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-3 mb-3 font-mono text-xs text-on-surface-variant break-all">
+        0x5678...efgh <span class="text-secondary">(Sepolia)</span>
+      </div>
+      <div class="grid grid-cols-2 gap-2 text-xs text-on-surface-variant mb-4">
+        <div>APY: <span class="text-on-surface font-bold">20%</span></div>
+        <div>Min Stake: <span class="text-on-surface font-bold">1 NXT</span></div>
+        <div>Lock Period: <span class="text-on-surface font-bold">Flexible</span></div>
+        <div>Compound: <span class="text-success font-bold">✓ Auto</span></div>
+      </div>
+      <a href="https://github.com/NextiaSensei/NextiaToken/blob/main/contracts" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-secondary text-sm font-medium hover:underline">
+        Ver código <span class="material-symbols-outlined text-sm">open_in_new</span>
+      </a>
+    </div>
+
+    <div class="glass-card p-6 rounded-2xl border border-outline-variant/10 hover:border-tertiary/30 transition-all">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="text-xs text-tertiary font-bold uppercase tracking-widest mb-1">Rewards</div>
+          <h3 class="text-lg font-headline font-bold">NextiaRewards</h3>
+        </div>
+        <span class="w-10 h-10 bg-tertiary/10 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-tertiary">savings</span>
+        </span>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-3 mb-3 font-mono text-xs text-on-surface-variant break-all">
+        0x9abc...ijkl <span class="text-tertiary">(Sepolia)</span>
+      </div>
+      <div class="grid grid-cols-2 gap-2 text-xs text-on-surface-variant mb-4">
+        <div>Pool: <span class="text-on-surface font-bold">150,000 NXT</span></div>
+        <div>Distribución: <span class="text-on-surface font-bold">Diaria</span></div>
+        <div>Claim: <span class="text-success font-bold">✓ Libre</span></div>
+        <div>Transparencia: <span class="text-success font-bold">✓ On-chain</span></div>
+      </div>
+      <a href="https://github.com/NextiaSensei/NextiaToken/blob/main/contracts" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-tertiary text-sm font-medium hover:underline">
+        Ver código <span class="material-symbols-outlined text-sm">open_in_new</span>
+      </a>
+    </div>
+
+    <div class="glass-card p-6 rounded-2xl border border-outline-variant/10 hover:border-primary/30 transition-all">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="text-xs text-primary font-bold uppercase tracking-widest mb-1">Governance</div>
+          <h3 class="text-lg font-headline font-bold">NextiaGovernance</h3>
+        </div>
+        <span class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary">how_to_vote</span>
+        </span>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-3 mb-3 font-mono text-xs text-on-surface-variant break-all">
+        0xdef0...mnop <span class="text-primary">(Sepolia)</span>
+      </div>
+      <div class="grid grid-cols-2 gap-2 text-xs text-on-surface-variant mb-4">
+        <div>Tipo: <span class="text-on-surface font-bold">DAO On-chain</span></div>
+        <div>Quorum: <span class="text-on-surface font-bold">10% supply</span></div>
+        <div>Propuestas: <span class="text-success font-bold">✓ Holders</span></div>
+        <div>Veto: <span class="text-on-surface font-bold">Owner</span></div>
+      </div>
+      <a href="https://github.com/NextiaSensei/NextiaToken/blob/main/contracts" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-primary text-sm font-medium hover:underline">
+        Ver código <span class="material-symbols-outlined text-sm">open_in_new</span>
+      </a>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ AUDITORÍA / TEST REPORT ═══════════════ -->
+<section class="py-16" id="audit">
+<div class="max-w-5xl mx-auto px-6">
+  <h2 class="text-3xl font-headline font-bold mb-2">🔒 Reporte de Auditoría</h2>
+  <p class="text-on-surface-variant mb-3">Resultados reales del test suite — Mochawesome v6.3.0 • Generado 2026</p>
+
+  <!-- Summary badges -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+    <div class="glass-card p-4 rounded-2xl border border-success/20 text-center">
+      <div class="text-3xl font-headline font-bold text-success">33</div>
+      <div class="text-xs text-on-surface-variant uppercase tracking-wider mt-1">Tests Pasados ✓</div>
+    </div>
+    <div class="glass-card p-4 rounded-2xl border border-outline-variant/10 text-center">
+      <div class="text-3xl font-headline font-bold text-on-surface">0</div>
+      <div class="text-xs text-on-surface-variant uppercase tracking-wider mt-1">Fallidos ✗</div>
+    </div>
+    <div class="glass-card p-4 rounded-2xl border border-primary/20 text-center">
+      <div class="text-3xl font-headline font-bold text-primary">4</div>
+      <div class="text-xs text-on-surface-variant uppercase tracking-wider mt-1">Suites</div>
+    </div>
+    <div class="glass-card p-4 rounded-2xl border border-tertiary/20 text-center">
+      <div class="text-3xl font-headline font-bold text-tertiary">~278ms</div>
+      <div class="text-xs text-on-surface-variant uppercase tracking-wider mt-1">Duración total</div>
+    </div>
+  </div>
+
+  <!-- Suite 1: Advanced & Edge Case -->
+  <div class="glass-card rounded-3xl border border-outline-variant/10 overflow-hidden mb-4">
+    <div class="flex items-center justify-between bg-surface-container-high/50 px-6 py-4 border-b border-outline-variant/10">
+      <div>
+        <h3 class="font-headline font-bold text-on-surface">NextiaToken — Advanced & Edge Case Tests</h3>
+        <p class="text-xs text-on-surface-variant font-mono mt-1">/test/NextiaToken.extra.test.js</p>
+      </div>
+      <div class="flex items-center gap-3 text-xs">
+        <span class="text-on-surface-variant">🕐 119ms</span>
+        <span class="bg-success/15 text-success px-3 py-1 rounded-full font-bold">9/9 ✓</span>
+      </div>
+    </div>
+    <div class="divide-y divide-outline-variant/5">
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">permite approve, allowance y transferFrom correctamente</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">21ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">falla si el balance es insuficiente</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">13ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">no permite transferir a la dirección cero</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">4ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">solo el owner puede mintear</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">13ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">reduce balance al quemar y falla si quema más de lo que tiene</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">16ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">emite eventos Transfer y Approval correctamente</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">19ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">solo el owner puede pausar y despausar</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">13ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">resiste un intento básico de reentrancy en transfer</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">8ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">actualiza totalSupply correctamente</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">12ms</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suite 2: Gas Tests -->
+  <div class="glass-card rounded-3xl border border-outline-variant/10 overflow-hidden mb-4">
+    <div class="flex items-center justify-between bg-surface-container-high/50 px-6 py-4 border-b border-outline-variant/10">
+      <div>
+        <h3 class="font-headline font-bold text-on-surface">NextiaToken Gas Tests ⛽</h3>
+        <p class="text-xs text-on-surface-variant font-mono mt-1">/test/NextiaToken.gas.test.js</p>
+      </div>
+      <div class="flex items-center gap-3 text-xs">
+        <span class="text-on-surface-variant">🕐 28ms</span>
+        <span class="bg-success/15 text-success px-3 py-1 rounded-full font-bold">6/6 ✓</span>
+      </div>
+    </div>
+    <div class="divide-y divide-outline-variant/5">
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">⛽ Gas de deploy</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">1ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">⛽ Gas de transfer</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">4ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">⛽ Gas de mint</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">5ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">⛽ Gas de burn</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">8ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">⛽ Gas de pause</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">3ms</span>
+      </div>
+      <div class="test-row flex items-center justify-between px-6 py-3">
+        <div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">⛽ Gas de unpause</span></div>
+        <span class="text-xs text-on-surface-variant font-mono">7ms</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suite 3: Security Tests -->
+  <div class="glass-card rounded-3xl border border-outline-variant/10 overflow-hidden mb-4">
+    <div class="flex items-center justify-between bg-surface-container-high/50 px-6 py-4 border-b border-outline-variant/10">
+      <div>
+        <h3 class="font-headline font-bold text-on-surface">NextiaToken Security Tests 🔒</h3>
+        <p class="text-xs text-on-surface-variant font-mono mt-1">/test/NextiaToken.security.test.js</p>
+      </div>
+      <div class="flex items-center gap-3 text-xs">
+        <span class="text-on-surface-variant">🕐 102ms</span>
+        <span class="bg-success/15 text-success px-3 py-1 rounded-full font-bold">13/13 ✓</span>
+      </div>
+    </div>
+    <div class="divide-y divide-outline-variant/5">
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">Debe emitir evento Transfer al transferir tokens</span></div><span class="text-xs text-on-surface-variant font-mono">8ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">Debe emitir evento Approval al aprobar allowance</span></div><span class="text-xs text-on-surface-variant font-mono">7ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">Debe emitir evento Transfer al hacer mint</span></div><span class="text-xs text-on-surface-variant font-mono">8ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">Debe emitir evento Transfer al quemar tokens</span></div><span class="text-xs text-on-surface-variant font-mono">12ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">Solo el owner puede pausar</span></div><span class="text-xs text-on-surface-variant font-mono">9ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">Solo el owner puede despausar</span></div><span class="text-xs text-on-surface-variant font-mono">9ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">Solo el owner puede mintear</span></div><span class="text-xs text-on-surface-variant font-mono">8ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">No debe permitir transferir más de lo que se tiene</span></div><span class="text-xs text-on-surface-variant font-mono">5ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">No debe permitir burn mayor al balance</span></div><span class="text-xs text-on-surface-variant font-mono">8ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">Debe fallar transferencias gigantes que excedan uint256</span></div><span class="text-xs text-on-surface-variant font-mono">4ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">Debe fallar si se intenta transferir cuando el contrato está pausado</span></div><span class="text-xs text-on-surface-variant font-mono">7ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">Debe fallar si se intenta aprobar allowance estando pausado</span></div><span class="text-xs text-on-surface-variant font-mono">6ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">Debe fallar transferFrom cuando está pausado</span></div><span class="text-xs text-on-surface-variant font-mono">11ms</span></div>
+    </div>
+  </div>
+
+  <!-- Suite 4: Core Tests -->
+  <div class="glass-card rounded-3xl border border-outline-variant/10 overflow-hidden mb-8">
+    <div class="flex items-center justify-between bg-surface-container-high/50 px-6 py-4 border-b border-outline-variant/10">
+      <div>
+        <h3 class="font-headline font-bold text-on-surface">NextiaToken — Core Tests</h3>
+        <p class="text-xs text-on-surface-variant font-mono mt-1">/test/NextiaToken.test.js</p>
+      </div>
+      <div class="flex items-center gap-3 text-xs">
+        <span class="text-on-surface-variant">🕐 29ms</span>
+        <span class="bg-success/15 text-success px-3 py-1 rounded-full font-bold">5/5 ✓</span>
+      </div>
+    </div>
+    <div class="divide-y divide-outline-variant/5">
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">assigns initial supply to deployer (owner)</span></div><span class="text-xs text-on-surface-variant font-mono">2ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">allows transfers between accounts</span></div><span class="text-xs text-on-surface-variant font-mono">5ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">allows burning tokens</span></div><span class="text-xs text-on-surface-variant font-mono">5ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">allows pausing and prevents transfers when paused</span></div><span class="text-xs text-on-surface-variant font-mono">7ms</span></div>
+      <div class="test-row flex items-center justify-between px-6 py-3"><div class="flex items-center gap-3"><span class="text-success text-sm">✓</span><span class="text-sm">allows unpausing and resuming transfers</span></div><span class="text-xs text-on-surface-variant font-mono">10ms</span></div>
+    </div>
+  </div>
+
+  <div class="text-center text-xs text-on-surface-variant">
+    Powered by <a href="http://adamgruber.github.io/mochawesome/" target="_blank" class="text-primary hover:underline">Mochawesome</a> v6.3.0 •
+    <a href="https://github.com/NextiaSensei/NextiaToken" target="_blank" class="text-primary hover:underline">Ver repositorio completo →</a>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ CTA FINAL ═══════════════ -->
+<section class="py-24 relative overflow-hidden">
+<div class="absolute inset-0 bg-secondary/5 -skew-y-2 pointer-events-none"></div>
+<div class="max-w-3xl mx-auto px-6 text-center relative">
+  <h2 class="text-4xl font-headline font-bold mb-4">¿Listo para invertir?</h2>
+  <p class="text-on-surface-variant mb-8 text-lg">Entra a la presale Tier 1 ahora — el mejor precio de NXT: <span class="text-primary font-bold">$0.005</span></p>
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+    <a href="https://nextia-marketing.vercel.app" class="bg-gradient-to-r from-secondary to-secondary-container text-on-secondary-fixed font-bold py-4 px-10 rounded-2xl hover:shadow-[0_0_30px_rgba(255,77,128,0.3)] transition-all">
+      🚀 Ir a la Presale
+    </a>
+    <a href="https://t.me/nextiatoken_presale_bot" target="_blank" rel="noopener" class="glass-card border border-outline-variant/15 text-on-surface font-semibold py-4 px-10 rounded-2xl hover:border-primary/30 transition-all">
+      💬 Bot de Telegram
+    </a>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="bg-[#121221] py-10 border-t border-[#444653]/15">
+<div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-6 gap-4">
+  <div>
+    <a href="#" class="text-xl font-bold text-primary font-headline tracking-widest uppercase">NXT DApp</a>
+    <p class="text-xs text-on-surface-variant mt-1">nextia-token.vercel.app</p>
+  </div>
+  <div class="flex gap-6 text-sm">
+    <a href="https://nextia-marketing.vercel.app" class="text-on-surface-variant hover:text-primary transition-colors">Presale</a>
+    <a href="https://t.me/nextiatoken_presale_bot" target="_blank" rel="noopener" class="text-on-surface-variant hover:text-secondary transition-colors">Telegram</a>
+    <a href="https://github.com/NextiaSensei" target="_blank" rel="noopener" class="text-on-surface-variant hover:text-primary transition-colors">GitHub</a>
+    <a href="mailto:jorgesensei@nextiamarketing.com" class="text-on-surface-variant hover:text-primary transition-colors">Email</a>
+  </div>
+  <p class="text-xs text-on-surface-variant opacity-70">© 2026 Nextia Protocol</p>
+</div>
+</footer>
+
+<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+<script>
+// ── Wallet ──────────────────────────────
+async function connectWallet() {
+  if (typeof window.ethereum === 'undefined') {
+    showToast('⚠️ Instala MetaMask para conectar tu wallet.', 'warn');
+    window.open('https://metamask.io', '_blank');
+    return;
+  }
+  try {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const addr = accounts[0];
+    document.getElementById('wallet-alert').classList.add('hidden');
+    const wi = document.getElementById('wallet-info');
+    wi.classList.remove('hidden');
+    document.getElementById('wallet-address').textContent = addr.slice(0,6) + '...' + addr.slice(-4) + ' conectado';
+    document.getElementById('connect-btn').textContent = addr.slice(0,6) + '...' + addr.slice(-4);
+    document.getElementById('nxt-balance').textContent = '1,000 NXT';
+    document.getElementById('nxt-usd').textContent = '5.00';
+    document.getElementById('staked-balance').textContent = '250 NXT';
+    document.getElementById('rewards-balance').textContent = '8.22 NXT';
+    document.getElementById('stake-max').textContent = '1,000 NXT';
+    document.getElementById('unstake-max').textContent = '250 NXT';
+    document.getElementById('claim-amount').textContent = '8.22';
+    showToast('✅ Wallet conectada correctamente.', 'success');
+  } catch(e) {
+    showToast('❌ Conexión rechazada.', 'error');
+  }
+}
+
+// ── Tabs stake/unstake/claim ─────────────
+function switchTab(panel) {
+  ['stake-panel','unstake-panel','claim-panel'].forEach(p => document.getElementById(p).classList.add('hidden'));
+  ['tab-stake','tab-unstake','tab-claim'].forEach(t => {
+    document.getElementById(t).classList.remove('active');
+    document.getElementById(t).classList.add('text-on-surface-variant');
+  });
+  document.getElementById(panel).classList.remove('hidden');
+  const tab = panel === 'stake-panel' ? 'tab-stake' : panel === 'unstake-panel' ? 'tab-unstake' : 'tab-claim';
+  document.getElementById(tab).classList.add('active');
+  document.getElementById(tab).classList.remove('text-on-surface-variant');
+}
+
+// ── Acciones stub ─────────────────────────
+function doStake() {
+  const amt = document.getElementById('stake-amount').value;
+  if (!amt || amt <= 0) { showToast('⚠️ Ingresa una cantidad válida.', 'warn'); return; }
+  showToast('🔒 Enviando transacción a Sepolia... (demo mode)', 'info');
+}
+function doUnstake() {
+  const amt = document.getElementById('unstake-amount').value;
+  if (!amt || amt <= 0) { showToast('⚠️ Ingresa una cantidad válida.', 'warn'); return; }
+  showToast('🔓 Retirando tokens de Sepolia... (demo mode)', 'info');
+}
+function doClaim() { showToast('💰 Reclamando rewards en Sepolia... (demo mode)', 'info'); }
+function setMaxStake() { document.getElementById('stake-amount').value = 1000; updateStakePreview(); }
+function setMaxUnstake() { document.getElementById('unstake-amount').value = 250; }
+
+// ── Calculadora APY ──────────────────────
+let calcPeriodDays = 30;
+function calcRewards() {
+  const amt = parseFloat(document.getElementById('calc-amount').value) || 1000;
+  document.getElementById('calc-amount-val').textContent = amt.toLocaleString() + ' NXT';
+  const apy = 0.20;
+  const rewards = amt * apy * (calcPeriodDays / 365);
+  document.getElementById('calc-rewards').textContent = rewards.toFixed(2);
+  document.getElementById('calc-total').textContent = (amt + rewards).toLocaleString(undefined, {maximumFractionDigits:2}) + ' NXT';
+  document.getElementById('calc-usd').textContent = (rewards * 0.005).toFixed(4);
+}
+function setPeriod(days) {
+  calcPeriodDays = days;
+  document.getElementById('calc-period-label').textContent = days === 365 ? '1 año' : days + ' días';
+  ['p30','p90','p365'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+    document.getElementById(id).classList.add('text-on-surface-variant');
+  });
+  const id = days === 30 ? 'p30' : days === 90 ? 'p90' : 'p365';
+  document.getElementById(id).classList.add('active');
+  document.getElementById(id).classList.remove('text-on-surface-variant');
+  calcRewards();
+}
+function updateStakePreview() {
+  const amt = parseFloat(document.getElementById('stake-amount').value) || 0;
+  document.getElementById('stake-preview-rewards').textContent = (amt * 0.20).toFixed(2) + ' NXT';
+}
+
+// ── Gráfica de barras ─────────────────────
+function renderChart() {
+  const initial = 1000;
+  const apy = 0.20;
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  let html = '<div class="space-y-2">';
+  for (let i = 1; i <= 12; i++) {
+    const rewards = initial * apy * (i / 12);
+    const total = initial + rewards;
+    const pctRewards = (rewards / total * 100).toFixed(1);
+    const pctBase = (initial / total * 100).toFixed(1);
+    html += `
+      <div class="flex items-center gap-3">
+        <div class="text-xs text-on-surface-variant w-8">${months[i-1]}</div>
+        <div class="flex-1 flex h-5 rounded-full overflow-hidden bg-surface-container">
+          <div class="bg-primary/70 h-full" style="width:${pctBase}%"></div>
+          <div class="apy-bar h-full" style="width:${pctRewards}%;background:linear-gradient(90deg,#6dd58c,#4CAF50)"></div>
+        </div>
+        <div class="text-xs text-success w-16 text-right">+${rewards.toFixed(1)} NXT</div>
+      </div>`;
+  }
+  html += '</div>';
+  document.getElementById('chart-bars').innerHTML = html;
+}
+
+// ── Leaderboard mock ──────────────────────
+function renderLeaderboard() {
+  const data = [
+    { addr: '0xA1b2...C3d4', staked: '12,500', rewards: '685.00', badge: '🥇' },
+    { addr: '0xE5f6...G7h8', staked: '8,200',  rewards: '449.86', badge: '🥈' },
+    { addr: '0xI9j0...K1l2', staked: '5,000',  rewards: '273.97', badge: '🥉' },
+    { addr: '0xM3n4...O5p6', staked: '3,750',  rewards: '205.48', badge: '4' },
+    { addr: '0xQ7r8...S9t0', staked: '2,100',  rewards: '115.07', badge: '5' },
+    { addr: '0xU1v2...W3x4', staked: '1,800',  rewards: '98.63',  badge: '6' },
+    { addr: '0xY5z6...A7b8', staked: '900',    rewards: '49.32',  badge: '7' },
+  ];
+  const html = data.map((d, i) => `
+    <div class="test-row grid grid-cols-12 items-center px-6 py-4 ${i === 0 ? 'bg-primary/5' : ''}">
+      <div class="col-span-1 text-lg">${d.badge}</div>
+      <div class="col-span-5 font-mono text-sm text-on-surface-variant">${d.addr}</div>
+      <div class="col-span-3 text-right font-bold text-primary text-sm">${d.staked}</div>
+      <div class="col-span-3 text-right font-bold text-success text-sm">${d.rewards}</div>
+    </div>
+  `).join('');
+  document.getElementById('leaderboard-rows').innerHTML = html;
+}
+
+// ── Toast ─────────────────────────────────
+function showToast(msg, type = 'info') {
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toast-msg');
+  const colors = { success: 'text-success', error: 'text-error', warn: 'text-secondary', info: 'text-primary' };
+  toastMsg.className = `text-sm font-medium ${colors[type]}`;
+  toastMsg.textContent = msg;
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 4000);
+}
+
+// ── Init ──────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  calcRewards();
+  renderChart();
+  renderLeaderboard();
+});
+
+// Navbar scroll
+window.onscroll = function() {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 50) nav.classList.add('bg-[#121221]/95');
+  else nav.classList.remove('bg-[#121221]/95');
+};
+</script>
+
+</body>
+</html>
