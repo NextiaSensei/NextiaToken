@@ -1,0 +1,47 @@
+[33m0821dc81[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m docs: align whitepaper v0.6, tokenomics and readmes
+[33md39a412e[m README.md nueva información actualizada
+[33mdbc4d9cc[m Whitepaper v0.6 — R&D architecture, tokenomics framework and governance
+[33mf9b3a5c8[m chore: add testnet and utility scripts
+[33m910971f6[m test: update NextiaToken unit tests
+[33m5f4f2970[m feat: update NextiaToken core logic
+[33m38466c25[m chore: clean gitignore and repo hygiene
+[33m7af92a4d[m Merge pull request #8 from NextiaSensei/portfolio-tracker
+[33m5538c96c[m 🚀 market_scanner herramienta para saber el momento de invertir y mejoramiento del dashboard
+[33m4d9210f0[m 🚀 Nextia Bot v2 - Modo Agresivo + Tokens Personales + Sin ADA
+[33m362e4864[m Merge pull request #7 from NextiaSensei/portfolio-tracker
+[33me53952c0[m 🔒 FIX: Remove exposed API keys and secure repository
+[33m2fce47e9[m 🚀 COMPLETADO: Nextia Trading Bot v1.0
+[33mdd381fa6[m 🚀 FEAT: Complete trading bot system v1.0
+[33m38ac03ce[m feat: 🚀 Actualización completa del README con documentación profesional
+[33mbb4e2d60[m 🚀 MAJOR UPDATE: Robust trading system with enhanced error handling
+[33m1c832b52[m fix: ⏰ Timestamp synchronization in Binance Testnet
+[33m10fde9b2[m feat: 🔒 Secure Binance Testnet integration
+[33mef5004e7[m FASE 1 COMPLETADA: - ✅ WebSocket operativo con Binance - ✅ Recepción datos tiempo real (BTC, ETH, ADA) - ✅ Sistema notificaciones Telegram - ✅ Tests de validación funcionando - ✅ Data engine básico operacional - 🚀 Preparado para Fase 2: Data Engine Avanzado
+[33m732a1145[m feat: 🤖 Add complete Trading Bot foundation - Day 1-2
+[33me4e2ae2f[m feat: 🚨 Add complete Alert System for Nextia ecosystem
+[33mb9b4a092[m 🚀 [PORTFOLIO TRACKER] Add investment tracking system
+[33m1a4d5827[m 🚀 [PORTFOLIO TRACKER] Add investment tracking system
+[33m08abfc96[m 📚 [DOCS] Update README with all 2025 tools and current status
+[33m89d76248[m 🚀 [MARKET ANALYZER] Implement Nextia Market Analyzer 2025
+[33md954a893[m 🔧 [OPTIMIZATION] Add optimized tools based on network diagnostics
+[33mb19b0919[m 📚 [DOCS] Update README with functional tools info
+[33me6ff7ed9[m 🧹 [CLEANUP] Remove non-functional scripts, keep only working tools
+[33m8c36b31a[m Merge pull request #1 from NextiaSensei/security-ecosystem
+[33me30f7a15[m 🔒 [SECURITY] Initial security ecosystem setup
+[33m316eab58[m Fase 8: deploy + verify scripts (sepolia & mainnet) y docs finales chore: add verify scripts for sepolia and mainnet (Fase 8)
+[33mc0f14cc4[m ✅ Fase 7 completada: Integración hardhat-gas-reporter, solidity-coverage y badges en README
+[33mdbd4d641[m README.md actualizado con estrategia beta de lanzamiento
+[33md69b1529[m 🚀 Fase 6.4: CI/CD pipeline optimizado con gas & coverage
+[33mc549c563[m seguridad private key
+[33mf203642d[m 🚀 Add CI pipeline with Hardhat tests, gas and coverage
+[33mdb863564[m ci: add CI workflow, coverage & slither docker setup; add admin scripts and test runner - Add GitHub Actions workflow for tests, gas and coverage - Add Dockerfile for slither + evm-cfg-builder - Add scripts/fullTestAndDeploy.js and scripts/admin.js - Update docs: how to run tests/coverage/slither locally - Notes: slither reported only informational issues; coverage 100%; 33 passing tests
+[33mcf78c8c1[m - Integración completa de OpenZeppelin ERC20, ERC20Burnable, ERC20Pausable y Ownable - Contrato NextiaToken compilado y analizado con Slither, sin issues críticos - Funciones de pause, unpause, mint, burn y approve implementadas - Informe Slither con 7 issues informativos y 0 issues de seguridad críticos - Preparación de contrato para pruebas unitarias y deploy en testnet Sepolia - Estado actual: 80% completado
+[33mb063dfa1[m ci: add security workflow (compile · test · flatten · slither)
+[33m74487fd0[m feat: update documentation with current project status, security analysis, and investor materials | Add comprehensive README, optimized changelog, and investor deck | Status: 28/28 tests passing, Sepolia deployed, gas optimized
+[33m8f54c31e[m 🚫 Ignorar carpeta flat/ para no subir archivos generados
+[33mc60549f9[m 🚀 Primer commit: proyecto NextiaToken + script analyze_auto.sh
+[33m72a968d0[m 🔥 Remove sensitive backups folder from repo
+[33mef04afaa[m docs: update READMEs with status, cheat-sheet, benchmark & coverage
+[33m06992365[m Optimización micro-gas y tests completos
+[33ma0c3e708[m versión nueva
+[33m13a58169[m NextiaToken v1.0: Secure contracts with tests
